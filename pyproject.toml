@@ -16,3 +16,8 @@ ruff = "^0.1.15"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.ruff.lint]
+extend-select = [
+  "UP",  # pyupgrade
+]
