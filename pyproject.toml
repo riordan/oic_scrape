@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "oi-catalog-scraping-pipeline"
+version = "0.1.0"
+description = "Invest in Open Infrastructure's data retrieval pipeline for their Catalog of Open Infrastructure and Tools"
+authors = ["David Riordan <dr@daveriordan.com>"]
+license = "Apache-2"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+Scrapy = "^2.11.0"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.1.15"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
