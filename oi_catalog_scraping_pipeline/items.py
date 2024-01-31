@@ -5,6 +5,46 @@
 
 from dataclasses import dataclass
 from typing import Optional
+from enum import Enum
+
+class Ioi_Grant_Category(Enum):
+    """
+    IOI's Grants Classification scheme from:
+    https://docs.google.com/spreadsheets/d/1PEQiOmHq1u5tKnNEvIFJTtG_6eLHbWHJv3_Epce7lcQ/edit#gid=933566905
+
+    ...
+
+    Members
+    -------
+    Adjacent : str
+        Award is not directly to the OI but supports activities adjacent to it in some way.
+    Adoption_community : str
+        Award supports adoption broadly in the community.
+    Adoption_local : str
+        Award supports adoption in a single institution.
+    Community : str
+        Award supports community building initiatives.
+    Events_travel : str
+        Award supports events and/or travel.
+    Operations : str
+        Award supports basic operations.
+    Research_and_development : str
+        Award supports R&D, including software development.
+    Strategy_governance_business_planning : str
+        Award supports strategic, governance, or business planning.
+    Other : str
+        Other
+    """
+    Adjacent = "Adjacent"
+    Adoption_community = "Adoption - community"
+    Adoption_local = "Adoption - local"
+    Community = "Community"
+    Events_travel = "Events/travel"
+    Operations = "Operations"
+    Research_and_development = "Research and development"
+    Strategy_governance_business_planning = "Strategy/governance/business planning"
+    Other = "Other"
+
 
 
 @dataclass
@@ -47,7 +87,7 @@ class GrantItem:
         The description or abstract of the grant
     IP_SOLNCAT : Optional[str]
         The Infra Finder solution category of TARGET
-    grant_category : Optional[str]
+    grant_category : Optional[Ioi_Grant_Category]
         The activity category of the grant
     comments : Optional[str]
         Any additional comments
@@ -67,5 +107,5 @@ class GrantItem:
     source: str
     grant_description: Optional[str]
     IP_SOLNCAT: Optional[str]
-    grant_category: Optional[str]
+    grant_category: Optional[Ioi_Grant_Category]
     comments: Optional[str]
