@@ -1,6 +1,7 @@
 import scrapy
 import re
 from oic_scrape.items import GrantItem
+from datetime import datetime
 
 
 class SloanSpider(scrapy.Spider):
@@ -37,13 +38,16 @@ class SloanSpider(scrapy.Spider):
                 funder_name="Alfred P. Sloan Foundation",
                 funder_ror_id="https://ror.org/052csg198",
                 recipient_org_name=grant.css("div.grantee").re(r"</span>(.*)\n\t</div>")[0],
+                OI=None,
                 pi_name=kv["Investigator"],
                 grant_year=grant.css("div.year").re(r"</span>(.*)\n\t</div>")[0],
                 award_amount=grant.css("div.amount").re(r"</span>(.*)\n\t</div>")[0],
                 award_currency="USD",  # Assuming the currency is USD
+                award_amount_usd=grant.css("div.amount").re(r"</span>(.*)\n\t</div>")[0],
                 source="sloan.org",
                 grant_description=grant.css("div.brief-description > p::text").get(),
                 program_of_funder=program_of_funder,
+                _crawled_at = datetime.utcnow(),
             )
 
         next_page = response.css("a.pager-right::attr(href)").get()

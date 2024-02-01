@@ -6,6 +6,7 @@
 from dataclasses import dataclass
 from typing import Optional
 from enum import Enum
+from datetime import datetime
 
 
 class Ioi_Grant_Category(Enum):
@@ -58,7 +59,7 @@ class GrantItem:
 
     Attributes
     ----------
-    grand_id : str
+    grant_id : str
         The unique identifier of the grant.
             If no public ID is available it will be prefixed with "ioi:<source_name>::"
             and a unique combination of grant attributes.
@@ -70,7 +71,7 @@ class GrantItem:
         The name of the recipient organization
     recipient_org_ror_id : Optional[str]
         The ROR ID of the recipient organization
-    OI : str
+    OI : Optional[str]
         The OI of the recipient
     pi_name : Optional[str]
         The name of the principal investigator
@@ -88,7 +89,7 @@ class GrantItem:
         The amount of the award
     award_currency : str
         The currency of the award
-    award_currency_usd : Optional[str]
+    award_amount_usd : Optional[str]
         The amount of the award in USD
     source : str
         The source of the information
@@ -103,26 +104,29 @@ class GrantItem:
         The activity category of the grant
     comments : Optional[str]
         Any additional comments
+    _crawled_at : datetime.datetime
+        The date and time the grant was crawled by the IOI extractor. Must be added by the crawler.
     """
 
     grant_id: str
-    funder_name: str
-    funder_ror_id: Optional[str]
-    recipient_org_name: str
-    recipient_org_ror_id: Optional[str]
-    OI: str
-    pi_name: Optional[str]
-    pi_org_affiliation: Optional[str]
-    grant_year: str
-    grant_duration: Optional[str]
-    grant_start_date: str
-    grant_end_date: Optional[str]
-    award_amount: str
-    award_currency: str
-    award_currency_usd: Optional[str]
-    source: str
-    grant_description: Optional[str]
-    program_of_funder: Optional[str]
-    IP_SOLNCAT: Optional[str]
-    grant_category: Optional[Ioi_Grant_Category]
-    comments: Optional[str]
+    funder_name: str = None
+    funder_ror_id: Optional[str] = None
+    recipient_org_name: str = None
+    recipient_org_ror_id: Optional[str] = None
+    OI: Optional[str] = None
+    pi_name: Optional[str] = None
+    pi_org_affiliation: Optional[str] = None
+    grant_year: str = None
+    grant_duration: Optional[str] = None
+    grant_start_date: Optional[str] = None
+    grant_end_date: Optional[str] = None
+    award_amount: str = None
+    award_currency: str = None
+    award_amount_usd: Optional[str] = None
+    source: str = None
+    grant_description: Optional[str] = None
+    program_of_funder: Optional[str] = None
+    IP_SOLNCAT: Optional[str] = None
+    grant_category: Optional[Ioi_Grant_Category] = None
+    comments: Optional[str] = None
+    _crawled_at: datetime = None
