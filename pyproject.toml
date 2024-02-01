@@ -9,6 +9,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.11"
 Scrapy = "^2.11.0"
+scrapy-playwright = "^0.0.34"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.1.15"
