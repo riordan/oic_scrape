@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "oi-catalog-scraping-pipeline"
+name = "oic_scrape"
 version = "0.1.0"
 description = "Invest in Open Infrastructure's data retrieval pipeline for their Catalog of Open Infrastructure and Tools"
 authors = ["David Riordan <dr@daveriordan.com>"]
