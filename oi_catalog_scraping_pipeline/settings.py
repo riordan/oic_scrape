@@ -1,4 +1,4 @@
-# Scrapy settings for oi_catalog_scraping_pipeline project
+# Scrapy settings for oic_scrape project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -7,14 +7,14 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = "oi_catalog_scraping_pipeline"
+BOT_NAME = "oic_scrape"
 
-SPIDER_MODULES = ["oi_catalog_scraping_pipeline.spiders"]
-NEWSPIDER_MODULE = "oi_catalog_scraping_pipeline.spiders"
+SPIDER_MODULES = ["oic_scrape.spiders"]
+NEWSPIDER_MODULE = "oic_scrape.spiders"
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-# USER_AGENT = "oi_catalog_scraping_pipeline (+http://www.yourdomain.com)"
+# USER_AGENT = "oic_scrape (+http://www.yourdomain.com)"
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
@@ -45,13 +45,13 @@ ROBOTSTXT_OBEY = True
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 # SPIDER_MIDDLEWARES = {
-#    "oi_catalog_scraping_pipeline.middlewares.OiCatalogScrapingPipelineSpiderMiddleware": 543,
+#    "oic_scrape.middlewares.OiCatalogScrapingPipelineSpiderMiddleware": 543,
 # }
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 # DOWNLOADER_MIDDLEWARES = {
-#    "oi_catalog_scraping_pipeline.middlewares.OiCatalogScrapingPipelineDownloaderMiddleware": 543,
+#    "oic_scrape.middlewares.OiCatalogScrapingPipelineDownloaderMiddleware": 543,
 # }
 
 # Enable or disable extensions
@@ -63,7 +63,7 @@ ROBOTSTXT_OBEY = True
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 # ITEM_PIPELINES = {
-#    "oi_catalog_scraping_pipeline.pipelines.OiCatalogScrapingPipelinePipeline": 300,
+#    "oic_scrape.pipelines.OiCatalogScrapingPipelinePipeline": 300,
 # }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
