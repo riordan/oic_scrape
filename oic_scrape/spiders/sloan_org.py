@@ -47,7 +47,7 @@ class SloanSpider(scrapy.Spider):
                 source="sloan.org",
                 grant_description=grant.css("div.brief-description > p::text").get(),
                 program_of_funder=program_of_funder,
-                _crawled_at = datetime.utcnow,
+                _crawled_at = datetime.utcnow(),
             )
 
         next_page = response.css("a.pager-right::attr(href)").get()
