@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from typing import Optional
 from enum import Enum
 
+
 class Ioi_Grant_Category(Enum):
     """
     IOI's Grants Classification scheme from:
@@ -35,6 +36,7 @@ class Ioi_Grant_Category(Enum):
     Other : str
         Other
     """
+
     Adjacent = "Adjacent"
     Adoption_community = "Adoption - community"
     Adoption_local = "Adoption - local"
@@ -44,7 +46,6 @@ class Ioi_Grant_Category(Enum):
     Research_and_development = "Research and development"
     Strategy_governance_business_planning = "Strategy/governance/business planning"
     Other = "Other"
-
 
 
 @dataclass
@@ -57,6 +58,10 @@ class GrantItem:
 
     Attributes
     ----------
+    grand_id : str
+        The unique identifier of the grant.
+            If no public ID is available it will be prefixed with "ioi:<source_name>::"
+            and a unique combination of grant attributes.
     funder_name : str
         The name of the funder
     funder_ror_id : Optional[str]
@@ -71,10 +76,14 @@ class GrantItem:
         The name of the principal investigator
     pi_org_affiliation : Optional[str]
         The affiliation of the principal investigator
-    grant_start_date : str
-        The start date of the grant
+    grant_year : str
+        The year of the grant. Fiscal year should be normalized to actual calendar year of issuance, as these can vary across funders.
+    grant_duration : Optional[str]
+        The length of time the grant is active (if known), in years or months
+    grant_start_date : Optional[str]
+        The starting date of the grant (if known)
     grant_end_date : Optional[str]
-        The end date of the grant
+        The end date of the grant (if known)
     award_amount : str
         The amount of the award
     award_currency : str
@@ -85,6 +94,9 @@ class GrantItem:
         The source of the information
     grant_description : Optional[str]
         The description or abstract of the grant
+    program_of_funder : Optional[str]
+        The funder's program or category of the grant (organization-specific).
+        If hierarchical, use a ">" to separate levels (e.g. "Research>Science>Physics")
     IP_SOLNCAT : Optional[str]
         The Infra Finder solution category of TARGET
     grant_category : Optional[Ioi_Grant_Category]
@@ -92,6 +104,8 @@ class GrantItem:
     comments : Optional[str]
         Any additional comments
     """
+
+    grant_id: str
     funder_name: str
     funder_ror_id: Optional[str]
     recipient_org_name: str
@@ -99,6 +113,8 @@ class GrantItem:
     OI: str
     pi_name: Optional[str]
     pi_org_affiliation: Optional[str]
+    grant_year: str
+    grant_duration: Optional[str]
     grant_start_date: str
     grant_end_date: Optional[str]
     award_amount: str
@@ -106,6 +122,7 @@ class GrantItem:
     award_currency_usd: Optional[str]
     source: str
     grant_description: Optional[str]
+    program_of_funder: Optional[str]
     IP_SOLNCAT: Optional[str]
     grant_category: Optional[Ioi_Grant_Category]
     comments: Optional[str]
