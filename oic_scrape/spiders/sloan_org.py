@@ -8,9 +8,11 @@ class SloanSpider(scrapy.Spider):
     source_name = "sloan.org"
     source_type = "grants"
     name = f"{source_name}_{source_type}"
-    start_urls = [
-        "https://sloan.org/grants-database?page=1",
-    ]
+    # start_urls = ["https://sloan.org/grants-database?page=1"]
+
+    def start_requests(self):
+         url = "https://sloan.org/grants-database?page=1"
+         yield scrapy.Request(url, meta={'playwright': True})
 
     def parse(self, response):
         for grant in response.xpath(
