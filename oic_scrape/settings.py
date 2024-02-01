@@ -14,7 +14,7 @@ NEWSPIDER_MODULE = "oic_scrape.spiders"
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-# USER_AGENT = "oic_scrape (+http://www.yourdomain.com)"
+USER_AGENT = "open-infrastructure-catalog-crawler (+https://www.investinopen.org)"
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True

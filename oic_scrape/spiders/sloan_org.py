@@ -1,5 +1,6 @@
 import scrapy
 import re
+from oic_scrape.items import GrantItem
 
 
 class SloanSpider(scrapy.Spider):
@@ -31,23 +32,19 @@ class SloanSpider(scrapy.Spider):
                 else kv["Program"]
             )
 
-            yield {
-                "grant_id": f"{self.source_name}:{self.source_type}:{grant_id}",
-                "funder_name": "Alfred P. Sloan Foundation",
-                "funder_ror_id": "https://ror.org/052csg198",
-                "recipient_org_name": grant.css("div.grantee").re(
-                    r"</span>(.*)\n\t</div>"
-                )[0],
-                # 'OI': None,  # TODO: I don't know what the OI id is; need to align
-                "pi_name": kv["Investigator"],
-                "grant_year": grant.css("div.year").re(r"</span>(.*)\n\t</div>")[0],
-                "award_amount": grant.css("div.amount").re(r"</span>(.*)\n\t</div>")[0],
-                "award_currency": "USD",  # Assuming the currency is USD
-                "source": "sloan.org",
-                "grant_description": grant.css("div.brief-description > p::text").get(),
-                "program_of_funder": program_of_funder,
-                # 'IP_SOLNCAT': None,  # TODO: Align on what this category is.
-            }
+            yield GrantItem(
+                grant_id=f"{self.source_name}:{self.source_type}:{grant_id}",
+                funder_name="Alfred P. Sloan Foundation",
+                funder_ror_id="https://ror.org/052csg198",
+                recipient_org_name=grant.css("div.grantee").re(r"</span>(.*)\n\t</div>")[0],
+                pi_name=kv["Investigator"],
+                grant_year=grant.css("div.year").re(r"</span>(.*)\n\t</div>")[0],
+                award_amount=grant.css("div.amount").re(r"</span>(.*)\n\t</div>")[0],
+                award_currency="USD",  # Assuming the currency is USD
+                source="sloan.org",
+                grant_description=grant.css("div.brief-description > p::text").get(),
+                program_of_funder=program_of_funder,
+            )
 
         next_page = response.css("a.pager-right::attr(href)").get()
         if next_page is not None:
