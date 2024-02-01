@@ -164,3 +164,4 @@ cython_debug/
 .aider*
 
 .ruff_cache
+.httpcache # Ignore the Scrapy cache
