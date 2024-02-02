@@ -81,7 +81,7 @@ ROBOTSTXT_OBEY = True
 
 # Enable and configure HTTP caching (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html#httpcache-middleware-settings
-HTTPCACHE_ENABLED = True
+HTTPCACHE_ENABLED = False
 HTTPCACHE_EXPIRATION_SECS = 60 * 60 * 12  # 12 hours
 HTTPCACHE_DIR = ".httpcache"
 HTTPCACHE_IGNORE_HTTP_CODES = []
@@ -95,4 +95,18 @@ FEED_EXPORT_ENCODING = "utf-8"
 DOWNLOAD_HANDLERS = {
     "http": "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler",
     "https": "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler",
+}
+
+# Scrapy Playwright settings
+PLAYWRIGHT_DEFAULT_NAVIGATION_TIMEOUT = (
+    30 * 1000
+)
+
+PLAYWRIGHT_BROWSER_TYPE = "chromium"
+
+
+
+PLAYWRIGHT_LAUNCH_OPTIONS = {
+    "headless": False,
+    "timeout": 20 * 1000,  # 20 seconds
 }
