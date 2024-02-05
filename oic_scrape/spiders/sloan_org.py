@@ -12,7 +12,7 @@ class SloanSpider(scrapy.Spider):
 
     def start_requests(self):
          url = "https://sloan.org/grants-database?page=1"
-         yield scrapy.Request(url, meta={'playwright': True})
+         yield scrapy.Request(url)
 
     def parse(self, response):
         for grant in response.xpath(
