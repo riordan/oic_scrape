@@ -25,13 +25,29 @@ class ImlsGovSpider(scrapy.Spider):
     
     def parse_grant(self, response):
         # Extract values
+
+        imls_log_number_raw = response.css('.title--small > span::text').get()
+        if imls_log_number_raw:
+            imls_log_number = imls_log_number_raw.strip()
+        else:
+            imls_log_number = None  # Or some default value
+
+
+        id = f"imls:log_number::{imls_log_number}"
         program_of_funder = response.css('div.field--name-field-program-categories-text .field__item::text').get()
         grant_year = response.css('div.field--name-field-fiscal-year-text .field__item::text').get()
-        award_amount = response.css('div.field .field__label:contains("Federal Funds") + .field__item::text').get()
+
+        award_amount_raw = response.css('div.field .field__label:contains("Federal Funds") + .field__item::text').get()
+        if award_amount_raw:
+                award_amount = award_amount_raw.strip()
+        else:
+            award_amount = None
+        
         award_currency = 'USD'  # Assuming USD for simplicity
         award_amount_usd = award_amount  # Assuming amount is already in USD
         city = response.css('div.field--name-field-city .field__item::text').get()
         state = response.css('div.field--name-field-states .field__item::text').get()
+        recipient_org_name = response.css('.title')
         recipient_location = f"{city}, {state}"
         grant_description = response.css('div.grant-body .text-formatted .field__item::text').get()
         funder_name = FUNDER_NAME 
@@ -40,15 +56,18 @@ class ImlsGovSpider(scrapy.Spider):
 
         # Create an instance of GrantItem
         item = GrantItem(
+            grant_id = id,
             program_of_funder=program_of_funder,
             grant_year=grant_year,
             award_amount=award_amount,
             award_currency=award_currency,
             award_amount_usd=award_amount_usd,
+            recipient_org_name=recipient_org_name,
             recipient_location=recipient_location,
             grant_description=grant_description,
             funder_name=funder_name,
             funder_ror_id=funder_ror_id,
+            source = 'imls.gov',
             _crawled_at=_crawled_at
         )
 
