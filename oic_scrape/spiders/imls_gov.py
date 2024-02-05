@@ -46,7 +46,7 @@ class ImlsGovSpider(scrapy.Spider):
         award_amount_usd = award_amount  # Assuming amount is already in USD
         city = response.css('div.field--name-field-city .field__item::text').get()
         state = response.css('div.field--name-field-states .field__item::text').get()
-        recipient_org_name = response.css('.title').get()
+        recipient_org_name = response.css('.field--name-field-institution::text').get()
         recipient_location = f"{city}, {state}"
         grant_description = response.css('div.grant-body .text-formatted .field__item::text').get()
         funder_name = FUNDER_NAME 
