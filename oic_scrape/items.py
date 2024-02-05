@@ -71,6 +71,8 @@ class GrantItem:
         The name of the recipient organization
     recipient_org_ror_id : Optional[str]
         The ROR ID of the recipient organization
+    recipient_location: Optional[str]
+        Funder's designated location of the grantee / project. JSON if structured data available, plain text string if only option.
     OI : Optional[str]
         The OI of the recipient
     pi_name : Optional[str]
@@ -113,6 +115,7 @@ class GrantItem:
     funder_ror_id: Optional[str] = None
     recipient_org_name: str = None
     recipient_org_ror_id: Optional[str] = None
+    recipient_location: Optional[str] = None
     OI: Optional[str] = None
     pi_name: Optional[
         str
