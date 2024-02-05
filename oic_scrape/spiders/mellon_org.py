@@ -176,5 +176,5 @@ fragment GrantSearchResults on GrantSearchResultWithTotal {
           source="mellon.org",
           grant_description=details['description'],
           program_of_funder=details['programArea'],
-          _crawled_at=datetime.now(),  # Set to current timestamp
+          _crawled_at=datetime.utcnow(),  # Set to current timestamp
       )
