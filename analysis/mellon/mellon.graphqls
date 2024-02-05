@@ -1,0 +1,1355 @@
+type AboutMellonSearch implements Search {
+    aboutMellonType: AboutMellonType
+    contentType: SearchContentType!
+    createdAt: DateTime
+    id: String!
+    image: Media
+    locale: String
+    openingParagraph: String
+    slug: String
+    title: String!
+}
+
+enum AboutMellonType {
+    HISTORY, MISSION, PEOPLE, TERMS_OF_USE, PRIVACY_POLICY, FINANCIALS, GRANT_MAKING_AREAS, PRESS_ROOM, NEWS, MMUF, GRANT_MAKING_AREA_DETAILS, CONTACT, GRANT_RESOURCES, EVENTS_LANDING, ANNUAL_REPORT, TRUSTEE, TRUSTEES
+}
+
+type AnnualReport implements AnnualReportInterface {
+    articleBodyPart1: String!
+    articleBodyPart2: AnnualReportRichText!
+    audio: Media
+    callToActionCtaText: String
+    callToActionText: String
+    date: String!
+    description: String
+    header: String!
+    headline: Media!
+    id: String!
+    introImages: [Media!]!
+    isLookingForAnnualReportsSectionVisible: Boolean!
+    moreAnnualReports: [Report!]!
+    moreAnnualReportsTitle: String
+    person: Person
+    quickLinks: QuickLinksModule
+    slug: String!
+    year: String!
+}
+
+interface AnnualReportInterface {
+    articleBodyPart1: String!
+    articleBodyPart2: AnnualReportRichText!
+    audio: Media
+    callToActionCtaText: String
+    callToActionText: String
+    date: String!
+    description: String
+    header: String!
+    headline: Media!
+    id: String!
+    introImages: [Media!]!
+    isLookingForAnnualReportsSectionVisible: Boolean!
+    moreAnnualReportsTitle: String
+    person: Person
+    quickLinks: QuickLinksModule
+    slug: String!
+    year: String!
+}
+
+type AnnualReportRichText implements ApiRichText {
+    includedAssets: [Media!]!
+    includedEntries: [AnnualReportRichTextNode!]!
+    value: String!
+}
+
+type AnnualReportRichTextNode {
+    data: ApiRichTextEntry
+    id: String!
+}
+
+type ApiGrant {
+    amount: Float!
+    areaOfFocus: String
+    date: Date!
+    description: String!
+    durationInMonths: Int!
+    granteeId: Int!
+    granteeName: String!
+    id: String!
+    location: String!
+    programArea: String!
+    title: String!
+}
+
+type ApiGrantSearchFilters {
+    amount: [FilterRange!]
+    countries: [String!]!
+    states: [String!]!
+    year: [Int!]
+}
+
+interface ApiRichText {
+    includedAssets: [Media!]!
+    value: String!
+}
+
+union ApiRichTextEntry = Feature | InlineImages | PresidentialQuoteCallOut | QuickLink | Quote | SpotlightShow | SpotlightVideo
+
+type Article implements ArticleInterface {
+    applyDropCap: Boolean!
+    audio: Media
+    author: String
+    body: ArticleRichText
+    creditLabel: String
+    creditText: String
+    date: String!
+    description: String
+    externalNewsUrl: String
+    externalPerson: ExternalPerson
+    eyebrow: String
+    faqs: FaqsModule
+    grantMakingArea: GrantMakingArea
+    heroImage: Media
+    hideDate: Boolean!
+    hideShareLink: Boolean!
+    id: String!
+    isLocalized: Boolean!
+    locale: String!
+    location: String
+    person: Person
+    photographer: String
+    publisherLogo: Media
+    quickLinks: QuickLinksModule
+    relatedContent: [ArticleRelatedContent!]!
+    slug: String!
+    thumbnailImage: Media
+    title: String!
+    type: ArticleType!
+}
+
+interface ArticleInterface {
+    applyDropCap: Boolean!
+    audio: Media
+    author: String
+    body: ArticleRichText
+    creditLabel: String
+    creditText: String
+    date: String!
+    description: String
+    externalNewsUrl: String
+    externalPerson: ExternalPerson
+    eyebrow: String
+    faqs: FaqsModule
+    grantMakingArea: GrantMakingArea
+    heroImage: Media
+    hideDate: Boolean!
+    hideShareLink: Boolean!
+    id: String!
+    isLocalized: Boolean!
+    locale: String!
+    location: String
+    photographer: String
+    publisherLogo: Media
+    quickLinks: QuickLinksModule
+    slug: String!
+    thumbnailImage: Media
+    title: String!
+    type: ArticleType!
+}
+
+union ArticleRelatedContent = ExternalEvent | Feature | NestedArticle | NestedGrantActivityArticle | NestedIdea
+
+type ArticleRichText implements ApiRichText {
+    includedAssets: [Media!]!
+    includedEntries: [ArticleRichTextNode!]!
+    value: String!
+}
+
+type ArticleRichTextNode {
+    data: ApiRichTextEntry
+    id: String!
+}
+
+type ArticleSearch implements Search {
+    articleType: ArticleType
+    contentType: SearchContentType!
+    grantMakingArea: String
+    grantee: String
+    id: String!
+    image: Media
+    locale: String
+    openingParagraph: String
+    slug: String
+    title: String!
+}
+
+enum ArticleType {
+    GENERIC, MELLON_IN_THE_NEWS, GRANTEE, REPORT, VOICES, PAST_EVENT
+}
+
+type AtGlanceCard {
+    linkEntry: NestedArticle
+    linkText: String
+    linkType: AtGlanceCardType!
+    number: String!
+    text: String!
+    title: String!
+}
+
+enum AtGlanceCardType {
+    HISTORY, PEOPLE, GRANT_MAKING_AREAS, ARTICLE, GRANTS_DB_SEARCH, MISSION, NONE
+}
+
+type AutocompleteResult {
+    primarySuggestions: Suggestions!
+    secondarySuggestions: Suggestions!
+}
+
+type CallForConcept {
+    article: NestedArticle
+    ctaText: String!
+    descriptionItems: [String!]!
+    grantMakingArea: GrantMakingArea!
+    registrationDeadlineDate: String!
+    registrationDeadlineTitle: String!
+    title: String!
+}
+
+union Callout = Article | ExternalEvent | GrantActivityArticle | NestedArticle | NestedGrantActivityArticle
+
+type Contact {
+    contactEmailsHeadline: String!
+    description: String!
+    emails: [ExternalLink!]!
+    facebookLink: String!
+    grantInquiriesHeadline: String!
+    grantInquiriesText: String!
+    id: String!
+    instagramLink: String!
+    linkedInLink: String!
+    newsletter: Newsletter
+    officeAddress: String!
+    officeAddressGoogleMapsLabel: String!
+    officeAddressGoogleMapsLink: String!
+    officeContactInformationHeadline: String!
+    officeFaxNumber: String
+    officeTelephoneNumber: String!
+    quickLinks: QuickLinksModule!
+    slug: String!
+    socialMediaHeadline: String!
+    socialMediaText: String!
+    title: String!
+    twitterLink: String!
+    youtubeLink: String!
+}
+
+type ContactPerson {
+    email: String!
+    name: String!
+    phone: String!
+    role: String!
+}
+
+union Content = EmphasizedArticle | ExternalEvent | Feature | NestedArticle | NestedGrantActivityArticle | NestedIdea | PresidentialQuoteCallOut | Quote | SpotlightShow | SpotlightVideo
+
+#An RFC-3339 compliant Full Date Scalar
+scalar Date
+
+#An RFC-3339 compliant DateTime Scalar
+scalar DateTime
+
+type Department {
+    id: String!
+    name: String!
+}
+
+type EmphasizedArticle {
+    article: EmphasizedArticleType!
+}
+
+union EmphasizedArticleType = Article | GrantActivityArticle
+
+type EventSearch implements Search {
+    contentType: SearchContentType!
+    date: DateTime
+    description: String
+    hideDate: Boolean!
+    id: String!
+    image: Media
+    locale: String
+    slug: String
+    title: String!
+}
+
+type Events implements MainNavigationPage {
+    description: String!
+    featuredEvent: NestedArticle
+    navigationImagePortrait: Media!
+    newsletter: Newsletter!
+    slug: String!
+    title: String!
+    upcomingEvents: [ExternalEvent!]!
+}
+
+type EventsResults {
+    entities: [Article!]!
+    totalCount: Int!
+}
+
+type ExternalEvent {
+    date: String!
+    endTime: String!
+    eventType: ExternalEventType!
+    link: String!
+    logo: Media
+    name: String!
+    startTime: String!
+    timeZone: String!
+}
+
+enum ExternalEventType {
+    EVENT, VIRTUAL_EVENT
+}
+
+type ExternalLink {
+    label: String!
+    link: String!
+}
+
+type ExternalPerson {
+    image: Media
+    jobTitle: String!
+    name: String!
+    organization: String!
+}
+
+type Faq {
+    answer: String!
+    question: String!
+}
+
+type FaqsModule {
+    faqs: [Faq!]!
+    title: String!
+}
+
+type Feature {
+    callout: Callout
+    content: FeatureContentRichText!
+    ctaContextualMessage: String
+    date: String!
+    heroImage: Media!
+    id: String!
+    idea: IdeaInterface!
+    intro: FeatureIntroRichText!
+    name: String!
+    newsletter: Newsletter!
+    quickLinks: QuickLinksModule
+    slug: String!
+    tagline: String!
+}
+
+type FeatureContentRichText implements ApiRichText {
+    includedAssets: [Media!]!
+    includedEntries: [FeatureRichTextNode!]!
+    value: String!
+}
+
+type FeatureIntroRichText implements ApiRichText {
+    includedAssets: [Media!]!
+    value: String!
+}
+
+type FeatureRichTextNode {
+    data: ApiRichTextEntry
+    id: String!
+    inlineCards: InlineCards
+}
+
+type FeatureSearch implements Search {
+    contentType: SearchContentType!
+    date: String!
+    id: String!
+    idea: String!
+    image: Media
+    name: String!
+    slug: String
+    tagline: String!
+}
+
+type FilterRange {
+    gt: Int
+    gte: Int
+    lt: Int
+    lte: Int
+}
+
+input FilterRangeInput {
+    gt: Int
+    gte: Int
+    lt: Int
+    lte: Int
+}
+
+type Financials implements MainNavigationPage {
+    auditedFinancialStatements: [Media!]!
+    auditedFinancialStatementsHeader: String
+    financialReports: [Media!]!
+    financialReportsHeader: String
+    graphsSection: FinancialsRichText
+    introDescription: String!
+    introParagraph: String!
+    navigationImagePortrait: Media!
+    privateFoundationReports: [Media!]!
+    privateFoundationReportsHeader: String
+    quickLinks: QuickLinksModule
+    slug: String!
+    socialBondFramework: String
+    socialBondFrameworkLink: QuickLink
+    socialBondFrameworkText: String
+    title: String!
+}
+
+type FinancialsRichText implements ApiRichText {
+    includedAssets: [Media!]!
+    includedEntries: [FinancialsRichTextNode!]!
+    value: String!
+}
+
+type FinancialsRichTextNode {
+    data: ApiRichTextEntry
+    id: String!
+}
+
+type Footer {
+    facebookLink: String!
+    footerLinks: [QuickLink!]!
+    id: String!
+    ideas: [IdeaInterface!]!
+    instagramLink: String!
+    linkedInLink: String!
+    newsletter: Newsletter!
+    slug: String!
+    title: String!
+    twitterLink: String!
+    youtubeLink: String!
+}
+
+type GlobalSearchEntityWithScore {
+    data: Search!
+    score: Float!
+}
+
+input GlobalSearchFilterInput {
+    contentTypes: [String!]
+    grantMakingAreas: [String!]
+    ideas: [String!]
+}
+
+type GlobalSearchResultWithTotal {
+    entities: [GlobalSearchEntityWithScore!]!
+    totalCount: Int!
+}
+
+type GrantActivityArticle implements GrantActivityArticleInterface {
+    applyDropCap: Boolean!
+    audio: Media
+    author: String!
+    body: GrantActivityArticleRichText!
+    connectLinks: [ExternalLink!]!
+    creditLabel: String
+    creditText: String
+    date: Date
+    description: String
+    grant: ApiGrant!
+    grantInsight: String
+    hideDate: Boolean!
+    hideShareLink: Boolean!
+    id: String!
+    isLocalized: Boolean!
+    leadImage: Media!
+    locale: String!
+    photographer: String
+    relatedArticles: [GrantStoryRelatedContent!]
+    slug: String!
+    thumbnailImage: Media
+    title: String!
+}
+
+interface GrantActivityArticleInterface {
+    applyDropCap: Boolean!
+    audio: Media
+    author: String!
+    body: GrantActivityArticleRichText!
+    connectLinks: [ExternalLink!]!
+    creditLabel: String
+    creditText: String
+    date: Date
+    description: String
+    grant: ApiGrant!
+    grantInsight: String
+    hideDate: Boolean!
+    hideShareLink: Boolean!
+    id: String!
+    isLocalized: Boolean!
+    leadImage: Media!
+    locale: String!
+    photographer: String
+    slug: String!
+    thumbnailImage: Media
+    title: String!
+}
+
+type GrantActivityArticleRichText implements ApiRichText {
+    includedAssets: [Media!]!
+    includedEntries: [GrantActivityArticleRichTextNode!]!
+    value: String!
+}
+
+type GrantActivityArticleRichTextNode {
+    data: ApiRichTextEntry
+    id: String!
+}
+
+type GrantDetails {
+    grant: ApiGrant!
+    relatedActivities: [GrantDetailsRelatedContent!]!
+    relatedGrants: [ApiGrant!]!
+    strategyCopy: String
+    strategyCtaLabel: String!
+    totalRelatedGrants: Int!
+}
+
+union GrantDetailsRelatedContent = NestedArticle | NestedGrantActivityArticle
+
+type GrantMakingArea {
+    id: String!
+    name: String!
+}
+
+type GrantMakingAreaDetails {
+    callForConcepts: [CallForConcept!]!
+    grantMakingArea: GrantMakingArea!
+    grantMakingProcessMessage: String
+    guidingStrategiesContent: String!
+    guidingStrategiesTitle: String!
+    heroImage: Media!
+    inFocusContent: [GrantMakingAreaInFocusContent!]
+    introDescription: String!
+    introductionText: String!
+    quickLinks: QuickLinksModule!
+    slug: String!
+    title: String!
+}
+
+union GrantMakingAreaInFocusContent = MMUF | NestedArticle | NestedGrantActivityArticle | Quote
+
+type GrantMakingAreas implements MainNavigationPage {
+    contextualMessage: String
+    grantmakingAreas: [GrantMakingAreaDetails!]!
+    introDescription: String!
+    navigationImagePortrait: Media!
+    slug: String!
+    title: String!
+}
+
+type GrantResources {
+    callForConcepts: [CallForConcept!]!
+    explanatoryParagraph: String!
+    explanatoryTitle: String!
+    faqs: FaqsModule
+    grantActivityArticles: [NestedGrantActivityArticle!]!
+    grantMakingAreas: [GrantMakingAreaDetails!]!
+    grantMakingAreasTitle: String!
+    grantsAtGlance: [AtGlanceCard!]!
+    introDescription: String!
+    newsletter: Newsletter
+    pullQuote: Quote
+    quickLinks: QuickLinksModule!
+    searchContextualMessage: String!
+    slug: String!
+    spotlight: Spotlight
+    title: String!
+}
+
+type GrantSearch implements Search {
+    contentType: SearchContentType!
+    country: String
+    dateAwarded: DateTime!
+    description: String!
+    grantMakingArea: String
+    grantee: String!
+    id: String!
+    slug: String
+    state: String
+    title: String!
+}
+
+type GrantSearchEntityWithScore {
+    data: GrantSearch!
+    score: Float!
+}
+
+input GrantSearchFilterInput {
+    amountRanges: [FilterRangeInput!]
+    country: [String!]
+    features: [String!]
+    grantMakingAreas: [String!]
+    ideas: [String!]
+    pastProgram: Boolean
+    state: [String!]
+    yearRange: FilterRangeInput
+    years: [Int!]
+}
+
+type GrantSearchResultWithTotal {
+    entities: [GrantSearchEntityWithScore!]!
+    totalCount: Int!
+}
+
+union GrantStoryRelatedContent = ExternalEvent | Feature | NestedArticle | NestedGrantActivityArticle | NestedIdea
+
+type History implements MainNavigationPage {
+    currentPresident: Person
+    currentPresidentStartYear: String
+    description: String!
+    explanatoryParagraph: String
+    founders: [HistoryPerson!]!
+    grantMakingProcessCtaText: String
+    grantMakingProcessDescription: String
+    heroImage: Media!
+    impactArticles: [NestedArticle!]!
+    impactTitle: String
+    navigationImagePortrait: Media!
+    peopleDescription: String
+    peopleSubtitle: String
+    peopleTitle: String
+    presidentsTitle: String
+    previousPresidents: [HistoryPerson!]!
+    slug: String!
+    spaceDescription: String
+    spaceImages: [Media!]!
+    spaceTitle: String
+    text: String!
+    title: String!
+}
+
+type HistoryPerson {
+    biography: String!
+    id: String!
+    image: Media!
+    name: String!
+    slug: String!
+    title: String
+    yearsOfPresidency: String
+}
+
+type Home {
+    ctaText: String!
+    grantActivityArticles: [NestedGrantActivityArticle!]!
+    id: String!
+    inFocusContent: [HomeInFocusContent!]!
+    inFocusHeadline: String!
+    inTheNews: [NewsEntity!]!
+    layout: String!
+    missionText: String!
+    newsletter: Newsletter
+    slug: String!
+    spotlightCTALink: HomeSpotlightCTALink!
+    spotlightImage: Media
+    spotlightVideo: String
+    thematicSpotlight: Spotlight
+}
+
+union HomeInFocusContent = ExternalEvent | NestedAnnualReport | NestedArticle | NestedGrantActivityArticle
+
+union HomeSpotlightCTALink = ExternalEvent | Feature | NestedArticle | NestedGrantActivityArticle | NestedIdea
+
+type Idea implements IdeaInterface {
+    callForConcepts: [CallForConcept!]!
+    content: [Content!]!
+    ctaContextualMessage: String
+    heroImage: Media!
+    id: String!
+    ideaSetupStatement: String!
+    name: String!
+    navigationImagePortrait: Media!
+    newsletter: Newsletter
+    question: String!
+    slug: String!
+}
+
+interface IdeaInterface {
+    callForConcepts: [CallForConcept!]!
+    ctaContextualMessage: String
+    heroImage: Media!
+    id: String!
+    ideaSetupStatement: String!
+    name: String!
+    navigationImagePortrait: Media!
+    newsletter: Newsletter
+    question: String!
+    slug: String!
+}
+
+type IdeaSearch implements Search {
+    associatedGrantsAndActivities: Int
+    contentType: SearchContentType!
+    id: String!
+    image: Media
+    question: String
+    slug: String
+    title: String!
+}
+
+union InlineCard = ExternalEvent | GrantMakingAreaDetails | NestedArticle | NestedGrantActivityArticle | NestedIdea
+
+type InlineCards {
+    cards: [InlineCard!]!
+}
+
+type InlineImages {
+    images: [Media!]!
+}
+
+type InternalLink {
+    contentType: String!
+    id: String!
+    slug: String!
+    subType: String
+}
+
+type MMUF {
+    articleText: String!
+    articleTitle: String!
+    atGlanceCards: [AtGlanceCard!]!
+    atGlanceTitle: String
+    contactEmail: String!
+    contactMessage: String!
+    contactTitle: String!
+    faqs: FaqsModule
+    fellowStoriesCtaLabel: String
+    fellowStoriesMessage: String
+    graduateInitiativesLink: QuickLink!
+    graduateInitiativesText: String!
+    graduateInitiativesTitle: String!
+    heroImage: Media
+    historyLink: QuickLink
+    inFocusContent: [MMUFInFocusContent!]!
+    inFocusHeadline: String
+    inTheNews: [NewsEntity!]!
+    introDescription: String!
+    newsletter: Newsletter
+    pullQuote: Quote
+    quickLinks: QuickLinksModule
+    slug: String!
+    spotlight: Spotlight
+    title: String!
+}
+
+union MMUFInFocusContent = ExternalEvent | NestedArticle
+
+type MainNavigation {
+    babyMissionStatement: String!
+    ideas: [NestedIdea!]!
+    pages: [MainNavigationPage!]!
+    slug: String!
+    title: String!
+}
+
+interface MainNavigationPage {
+    navigationImagePortrait: Media!
+    slug: String!
+    title: String!
+}
+
+type Media {
+    contentType: String!
+    description: String
+    fileName: String!
+    height: Int
+    size: Int!
+    src: String!
+    title: String!
+    width: Int
+}
+
+type Mission implements MainNavigationPage {
+    cards: [AtGlanceCard!]!
+    description: String!
+    navigationImagePortrait: Media!
+    quote: Quote
+    slug: String!
+    title: String!
+}
+
+type NestedAnnualReport implements AnnualReportInterface {
+    articleBodyPart1: String!
+    articleBodyPart2: AnnualReportRichText!
+    audio: Media
+    callToActionCtaText: String
+    callToActionText: String
+    date: String!
+    description: String
+    header: String!
+    headline: Media!
+    id: String!
+    introImages: [Media!]!
+    isLookingForAnnualReportsSectionVisible: Boolean!
+    moreAnnualReportsTitle: String
+    person: Person
+    quickLinks: QuickLinksModule
+    slug: String!
+    year: String!
+}
+
+type NestedArticle implements ArticleInterface {
+    applyDropCap: Boolean!
+    audio: Media
+    author: String
+    body: ArticleRichText
+    creditLabel: String
+    creditText: String
+    date: String!
+    description: String
+    externalNewsUrl: String
+    externalPerson: ExternalPerson
+    eyebrow: String
+    faqs: FaqsModule
+    grantMakingArea: GrantMakingArea
+    heroImage: Media
+    hideDate: Boolean!
+    hideShareLink: Boolean!
+    id: String!
+    isLocalized: Boolean!
+    locale: String!
+    location: String
+    opinionPerson: OpinionPerson
+    photographer: String
+    publisherLogo: Media
+    quickLinks: QuickLinksModule
+    slug: String!
+    thumbnailImage: Media
+    title: String!
+    type: ArticleType!
+}
+
+type NestedGrantActivityArticle implements GrantActivityArticleInterface {
+    applyDropCap: Boolean!
+    audio: Media
+    author: String!
+    body: GrantActivityArticleRichText!
+    connectLinks: [ExternalLink!]!
+    creditLabel: String
+    creditText: String
+    date: Date
+    description: String
+    grant: ApiGrant!
+    grantInsight: String
+    hideDate: Boolean!
+    hideShareLink: Boolean!
+    id: String!
+    isLocalized: Boolean!
+    leadImage: Media!
+    locale: String!
+    photographer: String
+    slug: String!
+    thumbnailImage: Media
+    title: String!
+}
+
+type NestedIdea implements IdeaInterface {
+    callForConcepts: [CallForConcept!]!
+    ctaContextualMessage: String
+    heroImage: Media!
+    id: String!
+    ideaSetupStatement: String!
+    name: String!
+    navigationImagePortrait: Media!
+    newsletter: Newsletter
+    question: String!
+    slug: String!
+}
+
+type News implements MainNavigationPage {
+    description: String!
+    featuredNews: NewsEntity
+    navigationImagePortrait: Media!
+    pressRoomCopy: String!
+    slug: String!
+    title: String!
+}
+
+union NewsEntity = NestedAnnualReport | NestedArticle
+
+input NewsFilterInput {
+    types: [String!]
+}
+
+union NewsResultEntity = AnnualReport | Article
+
+type NewsResults {
+    entities: [NewsResultEntity!]!
+    totalCount: Int!
+}
+
+type NewsSearch implements Search {
+    contentType: SearchContentType!
+    date: DateTime
+    hideDate: Boolean!
+    id: String!
+    image: Media
+    isExternal: Boolean
+    locale: String
+    newsLink: String
+    newsType: NewsType
+    openingParagraph: String
+    slug: String
+    title: String!
+}
+
+enum NewsSort {
+    NEWEST, OLDEST
+}
+
+enum NewsType {
+    MELLON_IN_THE_NEWS, GRANTEE, REPORT, ANNUAL_REPORT
+}
+
+type Newsletter {
+    description: String
+    disclaimer: String
+}
+
+type OldAnnualReport {
+    id: String!
+    report: Media!
+    year: String!
+}
+
+type OpinionPerson {
+    areaOfWork: PersonAreaOfWork!
+    id: String!
+    image: Media
+    jobTitle: String!
+    name: String!
+}
+
+type People implements MainNavigationPage {
+    contextualMessage: String!
+    description: String!
+    image: Media
+    leadership: [Person!]!
+    navigationImagePortrait: Media!
+    slug: String!
+    title: String!
+}
+
+type Person {
+    areaOfWork: PersonAreaOfWork!
+    biography: String
+    contextualMessage: String!
+    description: String
+    id: String!
+    image: Media
+    jobTitle: String!
+    name: String!
+    quickLinks: [ExternalLink!]!
+    quote: Quote
+    relatedNews: [NewsEntity!]!
+    relatedSectionTitle: String
+    slug: String!
+    spotlight: Spotlight
+}
+
+union PersonAreaOfWork = Department | GrantMakingArea
+
+type PersonSearch implements Search {
+    about: String
+    contentType: SearchContentType!
+    id: String!
+    image: Media
+    name: String!
+    role: String
+    slug: String
+}
+
+type PresidentialQuoteCallOut {
+    grantMakingArea: GrantMakingArea
+    presidentialCtaText: String!
+    presidentialHeading: String!
+    presidentialText: String!
+    presidentialTitle: String!
+    quote: Quote!
+    searchQuery: String
+}
+
+type PressRoom {
+    atGlanceCards: [AtGlanceCard!]!
+    brandGuidelinesAndMediaAssetsLinks: [QuickLink!]!
+    contactPersons: [ContactPerson!]!
+    contactsTitle: String!
+    description: String!
+    email: String!
+    emailLabel: String!
+    factSheetLink: Media!
+    guidelinesAndMediasDescription: String!
+    guidelinesAndMediasHeading: String!
+    newsContent: [NewsEntity!]!
+    quickLinks: QuickLinksModule!
+    slug: String!
+    spotlight: Spotlight
+    title: String!
+}
+
+type PrivacyPolicy {
+    addressDetails: String
+    body: String!
+    contactDetails: String
+    contactDetailsEmail: String
+    contactDetailsParagraph: String
+    description: String
+    isLocalized: Boolean!
+    lastRevisedDate: String
+    locale: String!
+    slug: String!
+    title: String!
+}
+
+type Query {
+    #Returning annual report by slug
+    annualReport(
+    #Annual report slug
+    slug: String!
+): AnnualReport
+    #Returning list of all annual reports
+    annualReports: [AnnualReport!]!
+    #Returning article by slug
+    article(
+    #Article locale - default is en-US
+    locale: String
+    #Article slug
+    slug: String!
+): Article
+    #Returning list of all articles
+    articles(
+    #Article locale - by default locale is null and query returns all locales
+    locale: String
+): [Article!]!
+    #Returning contact page
+    contact: Contact
+    #Returning list of all departments
+    departments: [Department!]!
+    #Returning paginated events results. Sorted by latest date
+    events(
+    #Max number of items to be fetched
+    limit: Int!
+    #Number of items to be skipped past
+    offset: Int!
+): EventsResults!
+    #Returning events page
+    eventsPage: Events
+    #Returning Feature by slug
+    feature(
+    #Feature slug
+    slug: String!
+): Feature
+    #Returning list of exact 3 featured searches
+    featuredSearches: [String!]!
+    #Returning list of all Features
+    features: [Feature!]!
+    #Returning financials page
+    financials: Financials
+    #Returning footer
+    footer: Footer
+    #Returning suggestions (2 groups with max 3 suggestions per group)
+    globalAutocomplete(
+    #Search term by which autocomplete is executed
+    term: String!
+): AutocompleteResult
+    #Returning grant activity article by slug
+    grantActivityArticle(
+    #Grant activity article locale - default is en-US
+    locale: String
+    #Grant activity article slug
+    slug: String!
+): GrantActivityArticle
+    #Returning list of all grant activity articles
+    grantActivityArticles(
+    #Grant activity article locale - by default locale is null and query returns all locales
+    locale: String
+): [GrantActivityArticle!]!
+    #Returning suggestions (2 groups with max 3 suggestions per group), primary suggestions are grants and secondary are grantees
+    grantAutocomplete(
+    #Search term by which autocomplete is executed
+    term: String!
+): AutocompleteResult
+    #Returning grant details by id
+    grantDetails(
+    #Grant id referenced to grant details
+    grantId: String!
+): GrantDetails
+    #Returning grantmaking area details page by slug
+    grantMakingAreaDetails(
+    #Grantmaking area details page slug
+    slug: String!
+): GrantMakingAreaDetails
+    #Returning list of all grant making areas
+    grantMakingAreas: [GrantMakingArea!]!
+    #Returning grant making areas landing page
+    grantMakingAreasLanding: GrantMakingAreas
+    #Returning grant resources page
+    grantResources: GrantResources
+    #Returning paginated list of grants that matches term, can be filtered by grant making area, amount, year or location
+    grantSearch(
+    #Filtering grants by making area, amount, year or location. More filters can be applied
+    filter: GrantSearchFilterInput
+    #Max number of items to be fetched
+    limit: Int!
+    #Number of items to be skipped past
+    offset: Int!
+    #Sorting result by title or time created. By default results are sorted by relevance
+    sort: SearchSort
+    #Term by which we search for grants
+    term: String!
+): GrantSearchResultWithTotal
+    #Returning amount and year filter for grant database search
+    grantSearchFilters: ApiGrantSearchFilters!
+    #Returning list of all grants
+    grants: [ApiGrant!]!
+    #Returning history page
+    history: History
+    #Returning history person by slug
+    historyPerson(
+    #History person slug
+    slug: String!
+): HistoryPerson
+    #Returning Home page
+    home: Home
+    #Returning idea by slug
+    idea(
+    #Idea slug
+    slug: String!
+): Idea
+    #Returning list of all ideas
+    ideas: [Idea!]!
+    #Returning main navigation
+    mainNavigation: MainNavigation
+    #Returning mission page
+    mission: Mission
+    #Returning MMUF page
+    mmuf: MMUF
+    #Returning list of most recent grants
+    mostRecentGrants(
+    #Filtering grants by making area, amount, year or location. More filters can be applied
+    filter: GrantSearchFilterInput
+    limit: Int!
+    offset: Int!
+    #Sorting result by title or time created. By default results are sorted by relevance
+    sort: SearchSort
+): [GrantSearch!]!
+    #Returning paginated news results, can be filtered by news type and sorted by date. Sorted by latest by default
+    news(
+    #Filtering results by news type
+    filter: NewsFilterInput
+    #Max number of items to be fetched
+    limit: Int!
+    #Number of items to be skipped past
+    offset: Int!
+    #Sorting result by date. By default results are sorted by latest date
+    sort: NewsSort
+): NewsResults!
+    #Returning news page
+    newsPage: News
+    #Returning people page
+    people: People
+    #Returning person by slug
+    person(
+    #Person slug
+    slug: String!
+): Person
+    #Returning paginated list of grants that matches exact entered phrase, can be filtered by grant making area, amount, year or location
+    phraseGrantSearch(
+    #Filtering grants by making area, amount, year or location. More filters can be applied
+    filter: GrantSearchFilterInput
+    #Max number of items to be fetched
+    limit: Int!
+    #Number of items to be skipped past
+    offset: Int!
+    #Sorting result by title or time created. By default results are sorted by relevance
+    sort: SearchSort
+    #Term by which we search for grants
+    term: String!
+): GrantSearchResultWithTotal
+    #Returning paginated results that matches exact entered phrase, can be filtered by content type, grant making area or idea and sorted by relevance or date. Sorted by relevance by default
+    phraseSearch(
+    #Filtering results by content type, idea or grant making area. More filters can be applied
+    filter: GlobalSearchFilterInput
+    #Max number of items to be fetched
+    limit: Int!
+    #Number of items to be skipped past
+    offset: Int!
+    #Sorting result by title or time created. By default results are sorted by relevance
+    sort: SearchSort
+    #Term by which we search
+    term: String!
+): GlobalSearchResultWithTotal
+    #Returning press room page
+    pressRoom: PressRoom
+    #Returning privacy policy page
+    privacyPolicy(
+    #Locale - default is en-US
+    locale: String
+): PrivacyPolicy
+    #Returning paginated results that matches search term, can be filtered by content type, grant making area or idea and sorted by relevance or date. Sorted by relevance by default
+    search(
+    #Filtering results by content type, idea or grant making area. More filters can be applied
+    filter: GlobalSearchFilterInput
+    #Max number of items to be fetched
+    limit: Int!
+    #Number of items to be skipped past
+    offset: Int!
+    #Sorting result by title or time created. By default results are sorted by relevance
+    sort: SearchSort
+    #Term by which we search
+    term: String!
+): GlobalSearchResultWithTotal
+    #Returning list of staff that can be filtered by departments or grant making areas
+    staff(
+    #Accepting department ids or grant making area ids by which we filter staff
+    filter: StaffFilterInput
+    #Number of staff returned if isInit is true
+    initLimit: Int!
+    #If isInit is true we are returning first initLimit number of staff that are sorted alphabetically, if it is false returning rest of the staff
+    isInit: Boolean!
+): [Person!]!
+    #Returning terms of use page
+    termsOfUse(
+    #Locale - default is en-US
+    locale: String
+): TermsOfUse
+    #Returning theme
+    theme: Theme
+    #Returning total number of staff that can be filtered by departments or grant making areas
+    totalStaff(
+    #Accepting department ids or grant making area ids by which we filter staff
+    filter: StaffFilterInput
+): Int!
+    #Returning trustee page
+    trustees: Trustees
+}
+
+type QuickLink {
+    asset: Media
+    externalLink: String
+    internalLink: InternalLink
+    label: String!
+}
+
+type QuickLinksModule {
+    eyebrow: String!
+    heading: String!
+    links: [QuickLink!]!
+}
+
+type Quote {
+    attribution: String!
+    audio: Media
+    isTwitterImage: Boolean!
+    link: String
+    linkText: String
+    quoteImage: Media
+    text: String!
+    twitterUsername: String
+}
+
+union Report = NestedAnnualReport | OldAnnualReport
+
+interface Search {
+    contentType: SearchContentType!
+    id: String!
+    slug: String
+}
+
+enum SearchContentType {
+    ARTICLE, GRANT, IDEA, ABOUT_MELLON, EVENT, NEWS, PERSON, GRANT_ACTIVITY_ARTICLE, FEATURE
+}
+
+enum SearchSort {
+    MOST_RELEVANT, NEWEST, OLDEST, A_Z, Z_A
+}
+
+union Spotlight = SpotlightShow | SpotlightVideo
+
+type SpotlightShow {
+    headline: String!
+    id: String!
+    images: [Media!]!
+    subHeadline: String
+}
+
+type SpotlightVideo {
+    ctaLabel: String!
+    headline: String!
+    id: String!
+    previewStaticImage: Media
+    previewVideo: Media
+    previewVideoUrl: String
+    subHeadline: String
+    video: Media
+    videoCaptions: Media
+    videoUrl: String
+}
+
+input StaffFilterInput {
+    departments: [String!]
+    grantMakingAreas: [String!]
+}
+
+enum SuggestionContentType {
+    ARTICLE, GRANT, IDEA, ABOUT_MELLON, EVENT, NEWS, PERSON, GRANTEE, FEATURE
+}
+
+type Suggestions {
+    contentType: SuggestionContentType
+    entities: [String!]!
+}
+
+type TermsOfUse {
+    addressDetails: String
+    body: String!
+    contactDetails: String
+    contactDetailsEmail: String
+    contactDetailsParagraph: String
+    description: String
+    isLocalized: Boolean!
+    lastRevisedDate: String
+    locale: String!
+    slug: String!
+    title: String!
+}
+
+type Theme {
+    copy: String!
+    isFullScreenAnimation: Boolean!
+    primary: String!
+    secondary: String!
+}
+
+type Trustee {
+    company: String!
+    image: Media
+    jobTitle: String
+    name: String!
+}
+
+type Trustees {
+    slug: String!
+    title: String!
+    trustees: [Trustee!]!
+}
+
+#Exposes a URL that specifies the behaviour of this scalar.
+directive @specifiedBy(
+    #The URL that specifies the behaviour of this scalar.
+    url: String!
+) on SCALAR
