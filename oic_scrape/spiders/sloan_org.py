@@ -12,7 +12,7 @@ class SloanSpider(scrapy.Spider):
 
     def start_requests(self):
          url = "https://sloan.org/grants-database?page=1"
-         yield scrapy.Request(url, meta={'playwright': True})
+         yield scrapy.Request(url)
 
     def parse(self, response):
         for grant in response.xpath(
@@ -36,7 +36,7 @@ class SloanSpider(scrapy.Spider):
             )
 
             yield GrantItem(
-                grant_id=f"{self.source_name}:{self.source_type}:{grant_id}",
+                grant_id=f"sloan:grants::{grant_id}",
                 funder_name="Alfred P. Sloan Foundation",
                 funder_ror_id="https://ror.org/052csg198",
                 recipient_org_name=grant.css("div.grantee").re(r"</span>(.*)\n\t</div>")[0],
