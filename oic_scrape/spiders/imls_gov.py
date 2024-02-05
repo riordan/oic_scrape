@@ -48,9 +48,9 @@ class ImlsGovSpider(scrapy.Spider):
         state = response.css('div.field--name-field-states .field__item::text').get()
         recipient_org_name = response.css('.field--name-field-institution::text').get()
         recipient_location = f"{city}, {state}"
-        grant_description = response.css('div.grant-body .text-formatted .field__item::text').get()
         funder_name = FUNDER_NAME 
         funder_ror_id = FUNDER_ROR
+        grant_description = response.css('div.clearfix:nth-child(4)::text').get() #least bad way of doing this for now?
         _crawled_at = datetime.utcnow()
 
         # Create an instance of GrantItem
