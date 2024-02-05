@@ -98,15 +98,12 @@ DOWNLOAD_HANDLERS = {
 }
 
 # Scrapy Playwright settings
-PLAYWRIGHT_DEFAULT_NAVIGATION_TIMEOUT = (
-    30 * 1000
-)
+PLAYWRIGHT_DEFAULT_NAVIGATION_TIMEOUT = 30 * 1000
 
 PLAYWRIGHT_BROWSER_TYPE = "chromium"
 
 
-
 PLAYWRIGHT_LAUNCH_OPTIONS = {
     "headless": False,
-    "timeout": 20 * 1000,  # 20 seconds
+    "timeout": 36 * 60 * 1000,  # 36 minutes
 }

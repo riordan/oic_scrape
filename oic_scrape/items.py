@@ -114,7 +114,9 @@ class GrantItem:
     recipient_org_name: str = None
     recipient_org_ror_id: Optional[str] = None
     OI: Optional[str] = None
-    pi_name: Optional[str] = None #TODO This should be a list, as it could be multiple PI's
+    pi_name: Optional[
+        str
+    ] = None  # TODO This should be a list, as it could be multiple PI's
     pi_org_affiliation: Optional[str] = None
     grant_year: str = None
     grant_duration: Optional[str] = None
