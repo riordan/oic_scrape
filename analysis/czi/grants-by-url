@@ -1,0 +1,8 @@
+select
+    "Project Website (Plain Text)",
+    "Account Name",
+    "Initiative & Program Text",
+    "EXTERNAL: Grant Description for Website",
+    amount
+from g
+order by 1
