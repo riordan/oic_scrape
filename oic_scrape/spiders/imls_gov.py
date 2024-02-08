@@ -13,6 +13,13 @@ class ImlsGovSpider(scrapy.Spider):
 
 
     def parse(self, response):
+        """
+        @url https://www.imls.gov/grants/awarded-grants
+        @returns requests 0 11
+        @returns items 0
+        Contract: should return 11 requests (up to 10 detail pages and the next index page) and no items
+
+        """
         # Extracting the links to the grant detail pages
         for grant_link in response.css('td.views-field-title a::attr(href)').getall():
             yield response.follow(grant_link, self.parse_grant)
@@ -23,6 +30,13 @@ class ImlsGovSpider(scrapy.Spider):
             yield response.follow(next_page, self.parse)
     
     def parse_grant(self, response):
+        """
+        @url https://imls.gov/grants/awarded/mh-253516-oms-23
+        @returns items 1
+        @returns requests 0
+        @scrapes grant_id program_of_funder grant_year award_amount award_currency award_amount_usd recipient_org_name recipient_location grant_description funder_name funder_ror_id source _crawled_at
+        """
+
         # Extract values
 
         imls_log_number_raw = response.css('.title--small > span::text').get()
