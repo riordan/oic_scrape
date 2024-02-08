@@ -81,3 +81,15 @@ In this current phase of the project, we are are outputting JSON to `data/<domai
 $ poetry run scrapy crawl sloan.org_grants -O data/sloan.org_grants.json
 ```
 
+## Testing
+
+There will eventually be CI-based testing along with data quality testing. For now, the simplest form of test we can do is using Scrapy's built in [Contracts](https://docs.scrapy.org/en/latest/topics/contracts.html) to ensure that the data we're obtaining from the page is (at least) present at the time of testing.
+
+Scrapy tests take the form of docstrings on functions of the spider. They are run with `poetry run scrapy check <spider_name>`. For example:
+
+```bash
+$ poetry run scrapy check sloan.org_grants
+```
+> WARNING: Scrapy's contracts are only usable on "synchronous functions", meaning if you're using an async function for a scrapy-playwright based spider, the contract approach will not work.
+
+

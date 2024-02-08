@@ -15,6 +15,13 @@ class SloanSpider(scrapy.Spider):
          yield scrapy.Request(url)
 
     def parse(self, response):
+        """
+        @url https://sloan.org/grants-database?page=1
+        @returns items 0 10
+        @scrapes grant_id funder_name funder_ror_id recipient_org_name pi_name grant_year award_amount award_currency award_amount_usd source grant_description program_of_funder _crawled_at
+        """
+
+
         for grant in response.xpath(
             "//div[@class='database-grants']/ul[@class='data-list']/li"
         ):
