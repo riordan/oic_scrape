@@ -108,7 +108,7 @@ class GrantItem(Item):
         Any additional comments
     _crawled_at : datetime.datetime
         The date and time the grant was crawled by the IOI extractor. Must be added by the crawler.
-    source_data = Optional[Dict[str, Any]]
+    raw_source_data = Optional[Dict[str, Any]]
         The raw fields obtained from the source, including that not used in the principal schema, in case we need to reference it later.
         Where including a source object blob (e.g. JSON or transformed XML), use the source's naming conventions.
         If you are scraping it from a site, use our own field names and conventions, where it makes sense.
@@ -138,4 +138,4 @@ class GrantItem(Item):
     grant_category = Field()
     comments = Field()
     _crawled_at = Field()
-    source_data = Field()
+    raw_source_data = Field()
