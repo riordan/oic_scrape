@@ -165,7 +165,7 @@ fragment GrantSearchResults on GrantSearchResultWithTotal {
           funder_ror_id=FUNDER_ROR,
           recipient_org_name=details['granteeName'],
           recipient_location=details['location'],
-          pi_name=None,  # No PI is listed in their database.
+          # pi_name=None,  # No PI is listed in their database.
           grant_year=grant_start_date.strftime('%Y') if grant_start_date else None,
           grant_duration=f"{details['durationInMonths']} months",
           grant_start_date=grant_start_date.strftime('%Y-%m-%d') if grant_start_date else None,
@@ -174,7 +174,9 @@ fragment GrantSearchResults on GrantSearchResultWithTotal {
           award_currency="USD",  # Adjust if currency information is available
           award_amount_usd=str(details['amount']),
           source="mellon.org",
+          source_url=response.url,
           grant_description=details['description'],
           program_of_funder=details['programArea'],
           _crawled_at=datetime.utcnow(),  # Set to current timestamp
+          raw_source_data=details,  # Store the raw source data for debugging
       )
