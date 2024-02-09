@@ -3,10 +3,8 @@
 # See documentation in:
 # https://docs.scrapy.org/en/latest/topics/items.html
 
-from dataclasses import dataclass
-from typing import Optional
 from enum import Enum
-from datetime import datetime
+from scrapy import Item, Field
 
 
 class Ioi_Grant_Category(Enum):
@@ -48,9 +46,7 @@ class Ioi_Grant_Category(Enum):
     Strategy_governance_business_planning = "Strategy/governance/business planning"
     Other = "Other"
 
-
-@dataclass
-class GrantItem:
+class GrantItem(Item):
     """
     A class to represent a grant item. Principal datatype of our final grants dataset.
     [Derived from SoOi_2024_grants_dataset](https://docs.google.com/spreadsheets/d/1PEQiOmHq1u5tKnNEvIFJTtG_6eLHbWHJv3_Epce7lcQ/edit#gid=0)
@@ -59,6 +55,8 @@ class GrantItem:
 
     Attributes
     ----------
+    Each attribute is a Field() object. The description of each field is as follows (types are not):
+
     grant_id : str
         The unique identifier of the grant.
             If no public ID is available it will be prefixed with "ioi:<source_name>::"
@@ -95,6 +93,8 @@ class GrantItem:
         The amount of the award in USD
     source : str
         The source of the information
+    source_url: Optional[str]
+        The URL the data was crawled from
     grant_description : Optional[str]
         The description or abstract of the grant
     program_of_funder : Optional[str]
@@ -108,30 +108,34 @@ class GrantItem:
         Any additional comments
     _crawled_at : datetime.datetime
         The date and time the grant was crawled by the IOI extractor. Must be added by the crawler.
+    source_data = Optional[Dict[str, Any]]
+        The raw fields obtained from the source, including that not used in the principal schema, in case we need to reference it later.
+        Where including a source object blob (e.g. JSON or transformed XML), use the source's naming conventions.
+        If you are scraping it from a site, use our own field names and conventions, where it makes sense.
     """
 
-    grant_id: str = None
-    funder_name: str = None
-    funder_ror_id: Optional[str] = None
-    recipient_org_name: str = None
-    recipient_org_ror_id: Optional[str] = None
-    recipient_location: Optional[str] = None
-    OI: Optional[str] = None
-    pi_name: Optional[
-        str
-    ] = None  # TODO This should be a list, as it could be multiple PI's
-    pi_org_affiliation: Optional[str] = None
-    grant_year: str = None
-    grant_duration: Optional[str] = None
-    grant_start_date: Optional[str] = None
-    grant_end_date: Optional[str] = None
-    award_amount: str = None
-    award_currency: str = None
-    award_amount_usd: Optional[str] = None
-    source: str = None
-    grant_description: Optional[str] = None
-    program_of_funder: Optional[str] = None
-    IP_SOLNCAT: Optional[str] = None
-    grant_category: Optional[Ioi_Grant_Category] = None
-    comments: Optional[str] = None
-    _crawled_at: datetime = None
+    grant_id = Field()
+    funder_name = Field()
+    funder_ror_id = Field()
+    recipient_org_name = Field()
+    recipient_org_ror_id = Field()
+    recipient_location = Field()
+    OI = Field()
+    pi_name = Field()
+    pi_org_affiliation = Field()
+    grant_year = Field()
+    grant_duration = Field()
+    grant_start_date = Field()
+    grant_end_date = Field()
+    award_amount = Field()
+    award_currency = Field()
+    award_amount_usd = Field()
+    source = Field()
+    source_url = Field()
+    grant_description = Field()
+    program_of_funder = Field()
+    IP_SOLNCAT = Field()
+    grant_category = Field()
+    comments = Field()
+    _crawled_at = Field()
+    source_data = Field()
