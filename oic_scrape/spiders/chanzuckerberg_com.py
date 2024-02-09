@@ -1,10 +1,51 @@
 import scrapy
+import json
+from oic_scrape.items import GrantItem
+import datetime
+
+FUNDER_NAME = "Chan Zuckerberg Initiative"
+FUNDER_ROR_ID = "https://ror.org/02qenvm24"
+
+"""
+V1 of scraper for the Chan Zuckerberg Initiative includes only grants listed
+on https://chanzuckerberg.com/grants-ventures/grants/. This does not
+include their funding through their venture investment or strategic investment arm.
+It also excludes project details, such as the PI and fuller project descriptions.
+
+While many of those details, particularly around specific scientific projects
+are available on project pages, they are not in this initial implementation.
+"""
 
 
 class ChanzuckerbergComSpider(scrapy.Spider):
-    name = "chanzuckerberg.com"
+    name = "chanzuckerberg.com_grants"
     allowed_domains = ["chanzuckerberg.com"]
-    start_urls = ["https://chanzuckerberg.com"]
+    start_urls = ["https://chanzuckerberg.com/wp-json/czi/v1/grants/"]
 
     def parse(self, response):
-        pass
+        timestamp = datetime.datetime.utcnow()
+        r = json.loads(response.text)
+        grants = r["grants"][0]
+
+        for g in grants:
+            raw_source_data = g["fields"]
+            grant_id = f"chanzuckerberg::{raw_source_data['Opportunity Salesforce ID']}"
+
+            yield GrantItem(
+                grant_id=grant_id,
+                funder_name=FUNDER_NAME,
+                funder_ror_id=FUNDER_ROR_ID,
+                recipient_org_name=raw_source_data["Account Name"],
+                grant_year = raw_source_data["Commitment Year"],
+                award_amount=raw_source_data["Amount"],
+                award_currency="USD",
+                award_amount_usd=raw_source_data["Amount"],
+                source="chanzuckerberg.com",
+                source_url=response.url,
+                grant_description=raw_source_data["EXTERNAL: Grant Description for Website"],
+                program_of_funder=raw_source_data["Initiative & Program Text"],
+                comments=f"funding_entity={raw_source_data['Funding Entity']}",
+                _crawled_at=timestamp,
+                raw_source_data=raw_source_data,
+            )
+            yield g
