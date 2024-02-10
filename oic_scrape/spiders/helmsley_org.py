@@ -2,6 +2,10 @@ import scrapy
 from scrapy.spiders import Spider
 from scrapy.selector import Selector
 import dateparser
+import datetime
+from dateutil.relativedelta import relativedelta
+from oic_scrape.items import GrantItem
+import re
 
 FUNDER_ROR_ID = "https://ror.org/011x6n313"
 FUNDER_NAME = "Leona M. and Harry B. Helmsley Charitable Trust"
@@ -14,6 +18,7 @@ class HelmsleyOrgSpider(Spider):
 
     custom_settings = {
         "PLAYWRIGHT_PROCESS_REQUEST_HEADERS": None,
+        "HTTPCACHE_ENABLED": False,
     }
 
     def start_requests(self):
@@ -58,10 +63,10 @@ class HelmsleyOrgSpider(Spider):
                     errback=self.errback,
                 )
 
-                next_button_selector = 'span.next:not(.disabled)'
+                next_button_selector = "span.next:not(.disabled)"
                 next_button = await page.query_selector(next_button_selector)
                 if next_button is None:
-                    print("Reached the last page.")
+                    self.logger.info("Reached the last page.")
                     break
                 else:
                     await page.click(next_button_selector)
@@ -77,8 +82,6 @@ class HelmsleyOrgSpider(Spider):
 
         # We will select most items based on the <h6>tag</h6> that proceeds the <p>value</p> we care about
         award_date = await self.get_item_value_from_sibling(response, "Date of Award")
-        grant_start_date = dateparser.parse(award_date)
-        grant_year = grant_start_date.strftime("%Y") if grant_start_date else None
         grant_duration = await self.get_item_value_from_sibling(
             response, "Term of Grant"
         )
@@ -90,20 +93,53 @@ class HelmsleyOrgSpider(Spider):
             response, "Project Title"
         )
 
-        data = {
-            "funder_name": FUNDER_NAME,
-            "funder_ror_id": FUNDER_ROR_ID,
+        # Now prepare additional fields that need configuration
+        source_url = response.url
+
+        # Get the Grant ID # from the URL
+        _match = re.search(r"\d+$", source_url)
+        if _match:
+            grant_id = f"helmsley:grants::{_match.group()}"
+        else:
+            raise ValueError(f"Could not find grant ID in the URL {source_url}.")
+
+        grant_start_date = dateparser.parse(award_date)
+        grant_year = grant_start_date.strftime("%Y") if grant_start_date else None
+        # Calculate the grant end date based on the grant duration
+        duration_in_months = int(re.search(r"\d+", grant_duration).group())
+        # Calculate the grant_end_date by adding the duration to the grant_start_date
+        grant_end_date = grant_start_date + relativedelta(months=duration_in_months)
+
+        raw_source_data = {
             "recipient_org_name": recipient_org_name,
-            "grant_start_date": grant_start_date,
-            "grant_year": grant_year,
-            "grant_duration": grant_duration,  # Calculate the end-date
-            "award_amount": award_amount,
-            "award_currency": "USD",
-            "grant_description": grant_description,
-            "program_of_funder": program_of_funder,
+            "award_date": award_date,
+            "term_of_grant": grant_duration,
+            "amount": award_amount,
+            "project_title": grant_description,
+            "program": program_of_funder,
         }
 
-        yield data
+        gi = GrantItem(
+            grant_id=grant_id,
+            funder_name=FUNDER_NAME,
+            funder_ror_id=FUNDER_ROR_ID,
+            recipient_org_name=recipient_org_name,
+            grant_year=grant_year,
+            grant_duration=grant_duration,
+            grant_start_date=grant_start_date,
+            grant_end_date=grant_end_date,
+            award_amount=award_amount,
+            award_currency="USD",
+            award_amount_usd=award_amount,
+            source="helmsleytrust.org",
+            source_url=source_url,
+            grant_description=grant_description,
+            program_of_funder=program_of_funder,
+            _crawled_at=datetime.utcnow(),
+            raw_source_data=raw_source_data,
+        )
+
+        yield raw_source_data
 
     async def get_item_value_from_sibling(self, response, helmsley_heading):
         """
