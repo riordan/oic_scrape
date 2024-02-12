@@ -2,7 +2,7 @@ import scrapy
 from scrapy.spiders import Spider
 from scrapy.selector import Selector
 import dateparser
-import datetime
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from oic_scrape.items import GrantItem
 import re
@@ -18,7 +18,9 @@ class HelmsleyOrgSpider(Spider):
 
     custom_settings = {
         "PLAYWRIGHT_PROCESS_REQUEST_HEADERS": None,
-        "HTTPCACHE_ENABLED": False,
+        "HTTPCACHE_ENABLED": False,  # All Playwright scrapers require the HTTPCache be disabled
+        "PLAYWRIGHT_DEFAULT_NAVIGATION_TIMEOUT": 120
+        * 1000,  # Use a longer navigation timeout
     }
 
     def start_requests(self):
@@ -34,8 +36,14 @@ class HelmsleyOrgSpider(Spider):
             )
 
     async def parse(self, response):
+        """
+        Crawls all ajax pages of https://helmsleytrust.org/our-grants/ to build the list of grant URLs.
+        Then it will crawl each grant URL to extract the grant data.
+        """
         # get the page from the response
         page = response.meta["playwright_page"]
+
+        all_grants_urls = []
 
         #  Since the item index page remains the same and loads in new content
         # we will loop over the index page until we reach the end.
@@ -49,35 +57,65 @@ class HelmsleyOrgSpider(Spider):
             # transform into a Selector
             selector = Selector(text=content)
 
-            # extract llinks to item pages
+            # extract links to item pages
             links = selector.css('td[data-title="GRANTEE"] a::attr(href)').extract()
+            # add to list of all grants so we can crawl when finished with index
+            all_grants_urls.extend(links)
 
-            # follow the links by sending them to item processing function
-            for itemLink in links:
-                yield scrapy.Request(
-                    itemLink,
-                    meta={
-                        "playwright": True,
-                    },
-                    callback=self.crawl_item_page,
-                    errback=self.errback,
-                )
+            self.logger.debug(
+                f"The number of grants found so far: {len(all_grants_urls)}"
+            )
 
-                next_button_selector = "span.next:not(.disabled)"
-                next_button = await page.query_selector(next_button_selector)
-                if next_button is None:
-                    self.logger.info("Reached the last page.")
-                    break
-                else:
-                    await page.click(next_button_selector)
-                    await page.wait_for_load_state(state="networkidle")
+            next_button_selector = "span.next:not(.disabled)"
+            next_button = await page.query_selector(next_button_selector)
+            last_page = await page.query_selector("span.next.disabled")
+            self.logger.debug(f"next button context: {next_button}")
+
+            if not last_page and next_button:
+                data_page = await next_button.get_attribute("data-page")
+                self.logger.debug(f"Requesting data-page {data_page}")
+                # await asyncio.sleep(5)
+                # Click the button to request data get to the next page
+                await page.click(next_button_selector, timeout=60000)
+                await page.wait_for_load_state(state="networkidle")
+            else:
+                self.logger.info("Reached the last index page.")
+                break
+
+        # I'm afraid I'm not collecting the last page, also the URL count is massive.
+        # Lets just collect the final URLs again and deduplicate.
+        content = await page.content()
+        selector = Selector(text=content)
+        links = selector.css('td[data-title="GRANTEE"] a::attr(href)').extract()
+        all_grants_urls.extend(links)
+
+        # Deduplicate the list of grant URLs
+        grant_urls = list(set(all_grants_urls))
+
+        self.logger.debug(grant_urls)
+        self.logger.debug(f"All grant URLS (count: {len(grant_urls)}):")
+        await page.close()  # Close the index page
+
+        self.logger.info("Beginning crawl of grant pages.")
+        # follow the links by sending them to item processing function
+        for url in grant_urls:
+            yield scrapy.Request(
+                url,
+                meta={
+                    "playwright": True,
+                },
+                callback=self.crawl_item_page,
+                errback=self.errback,
+            )
+        self.logger.info("Completed crawl of grant pages.")
 
         # Once we've reached the end, close the page and the context
-
-        await page.close()
-        await page.context.close()
+        self.logger.debug("Handling end of crawl. Closing the page and the context.")
 
     async def crawl_item_page(self, response):
+        # page = response.meta["playwright_page"] # Use this to get the Playwright page context
+
+        self.logger.info(f"Processing item page: {response.url}")
         recipient_org_name = response.css(".headline::text").get()
 
         # We will select most items based on the <h6>tag</h6> that proceeds the <p>value</p> we care about
@@ -93,11 +131,21 @@ class HelmsleyOrgSpider(Spider):
             response, "Project Title"
         )
 
+        raw_source_data = {
+            "recipient_org_name": recipient_org_name,
+            "award_date": award_date,
+            "term_of_grant": grant_duration,
+            "amount": award_amount,
+            "project_title": grant_description,
+            "program": program_of_funder,
+        }
+
         # Now prepare additional fields that need configuration
         source_url = response.url
 
         # Get the Grant ID # from the URL
-        _match = re.search(r"\d+$", source_url)
+        # https://helmsleytrust.org/grants/association-sante-diabete-20196048/
+        _match = re.search(r"(\d+)(?:/)?$", source_url)
         if _match:
             grant_id = f"helmsley:grants::{_match.group()}"
         else:
@@ -110,16 +158,7 @@ class HelmsleyOrgSpider(Spider):
         # Calculate the grant_end_date by adding the duration to the grant_start_date
         grant_end_date = grant_start_date + relativedelta(months=duration_in_months)
 
-        raw_source_data = {
-            "recipient_org_name": recipient_org_name,
-            "award_date": award_date,
-            "term_of_grant": grant_duration,
-            "amount": award_amount,
-            "project_title": grant_description,
-            "program": program_of_funder,
-        }
-
-        gi = GrantItem(
+        grant = GrantItem(
             grant_id=grant_id,
             funder_name=FUNDER_NAME,
             funder_ror_id=FUNDER_ROR_ID,
@@ -139,7 +178,7 @@ class HelmsleyOrgSpider(Spider):
             raw_source_data=raw_source_data,
         )
 
-        yield raw_source_data
+        yield grant
 
     async def get_item_value_from_sibling(self, response, helmsley_heading):
         """
