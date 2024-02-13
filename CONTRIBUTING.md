@@ -77,10 +77,10 @@ sloan.org_grants
 
 You can trigger a crawl with: `poetry run scrapy crawl <scraper_name>`, however it will just output to your terminal.
 
-In this current phase of the project, we are are outputting JSON to `data/<domain_crawltype>.json`.
+In this current phase of the project, we are are outputting [jsonlines](https://jsonlines.org/) to `data/<domain_crawltype>.jsonl`.
 
 ```bash
-$ poetry run scrapy crawl sloan.org_grants -O data/sloan.org_grants.json
+$ poetry run scrapy crawl sloan.org_grants -O data/sloan.org_grants.jsonl
 ```
 
 ## Testing
