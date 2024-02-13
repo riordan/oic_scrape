@@ -1,0 +1,5 @@
+data/
+notebook_runs/
+! .gitkeep
+! data/.gitkeep
+! notebook_runs/.gitkeep
