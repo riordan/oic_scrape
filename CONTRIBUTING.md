@@ -1,6 +1,6 @@
 # Contributing
 
-We welcome all help in contributing and maintaining this effort. This is currently a stub document and will serve as a placeholder for more detailed information in the future.
+We welcome all help in contributing and maintaining this effort. This is currently an in-progress document and will serve as a placeholder for more detailed information in the future.
 
 ## Participation & Code of Conduct
 
@@ -28,6 +28,8 @@ The project architecture is:
     - Scrapy _Crawling framework_
         - scrapy-playwright _extension for working with interactive sites_
         - Chromium _browser for crawling interactive sites_
+    - Jupyter _for file-based pipelines_
+    - [Papermill](https://papermill.readthedocs.io/en/latest/) _for running file-based pipelines_
 
 ### Prerequisites
 
@@ -92,4 +94,17 @@ $ poetry run scrapy check sloan.org_grants
 ```
 > WARNING: Scrapy's contracts are only usable on "synchronous functions", meaning if you're using an async function for a scrapy-playwright based spider, the contract approach will not work.
 
+## Running Notebook-based Pipelines
 
+A number of sources (e.g. NEH) provide more complete data on their grantmaking via file downloads than they do via their grant search systems. We use individual Jupyter notebooks to process these files into the same format as the data obtained from the web.
+
+These follow similar conventions to the Scrapy-based crawlers, but are run with `poetry run papermill <notebook> <output_notebook> -p <parameter> <value>`. For example:
+
+```bash
+$ poetry run papermill notebook_pipelines/neh_gov.ipynb notebook_pipelines
+/notebook_runs/neh_gov-2024-02-13-1128.ipynb
+Input Notebook:  notebook_pipelines/neh_gov.ipynb
+Output Notebook: notebook_pipelines/notebook_runs/neh_gov-2024-02-13-1128.ipynb
+Executing:   0%|                                                                        | 0/14 [00:00<?, ?cell/s]Executing notebook with kernel: python3
+Executing: 100%|███████████████████████████████████████████████████████████████| 14/14 [00:14<00:00,  1.07s/cell]
+```
