@@ -11,9 +11,19 @@ python = "^3.11"
 Scrapy = "^2.11.0"
 scrapy-playwright = "^0.0.34"
 dateparser = "^1.2.0"
+pyarrow = "^15.0.0"
+papermill = "^2.5.0"
+requests = "^2.31.0"
+pandas = "^2.2.0"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.1.15"
+jupyter = {extras = ["notebook"], version = "^1.0.0"}
+ipython = "^8.21.0"
+pandas = "^2.2.0"
+requests = "^2.31.0"
+papermill = "^2.5.0"
+pyarrow = "^15.0.0"
 
 [build-system]
 requires = ["poetry-core"]
