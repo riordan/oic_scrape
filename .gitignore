@@ -160,8 +160,7 @@ cython_debug/
 #.idea/
 
 .ds_store
-
 .aider*
-
 .ruff_cache
 .httpcache # Ignore the Scrapy cache
+cache.sqlite #ignore requests_cache

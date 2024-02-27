@@ -95,6 +95,8 @@ class GrantItem(Item):
         The source of the information
     source_url: Optional[str]
         The URL the data was crawled from
+    grant_title : Optional[str]
+        The title of the grant
     grant_description : Optional[str]
         The description or abstract of the grant
     program_of_funder : Optional[str]
@@ -132,6 +134,7 @@ class GrantItem(Item):
     award_amount_usd = Field()
     source = Field()
     source_url = Field()
+    grant_title = Field()
     grant_description = Field()
     program_of_funder = Field()
     IP_SOLNCAT = Field()
