@@ -6,6 +6,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from oic_scrape.items import AwardItem
 import re
+from attrs import asdict
 
 FUNDER_ROR_ID = "https://ror.org/011x6n313"
 FUNDER_NAME = "Leona M. and Harry B. Helmsley Charitable Trust"
@@ -43,7 +44,7 @@ class HelmsleyOrgSpider(Spider):
         # get the page from the response
         page = response.meta["playwright_page"]
 
-        all_grants_urls = []
+        all_grants_urls = set()
 
         #  Since the item index page remains the same and loads in new content
         # we will loop over the index page until we reach the end.
@@ -60,7 +61,7 @@ class HelmsleyOrgSpider(Spider):
             # extract links to item pages
             links = selector.css('td[data-title="GRANTEE"] a::attr(href)').extract()
             # add to list of all grants so we can crawl when finished with index
-            all_grants_urls.extend(links)
+            all_grants_urls.update(links)
 
             self.logger.debug(
                 f"The number of grants found so far: {len(all_grants_urls)}"
@@ -87,7 +88,7 @@ class HelmsleyOrgSpider(Spider):
         content = await page.content()
         selector = Selector(text=content)
         links = selector.css('td[data-title="GRANTEE"] a::attr(href)').extract()
-        all_grants_urls.extend(links)
+        all_grants_urls.update(links)
 
         # Deduplicate the list of grant URLs
         grant_urls = list(set(all_grants_urls))
@@ -148,7 +149,7 @@ class HelmsleyOrgSpider(Spider):
         # https://helmsleytrust.org/grants/association-sante-diabete-20196048/
         _match = re.search(r"(\d+)(?:/)?$", source_url)
         if _match:
-            grant_id = f"helmsley:grants::{_match.group()}"
+            grant_id = f"helmsley:grants::{_match.group(1)}"
         else:
             raise ValueError(f"Could not find grant ID in the URL {source_url}.")
         
@@ -185,7 +186,7 @@ class HelmsleyOrgSpider(Spider):
             raw_source_data=str(raw_source_data),
         )
 
-        yield award
+        yield asdict(award)
 
     async def get_item_value_from_sibling(self, response, helmsley_heading):
         """
