@@ -171,7 +171,7 @@ class AwardParticipant:
     """
 
     full_name: str = attrs.field(validator=validators.instance_of(str))
-    is_pi: bool = attrs.field(default=False, validator=validators.instance_of(bool))
+    is_pi: bool = attrs.field(default=False, validator=validators.instance_of(bool)) # type: ignore
 
     affiliations: Optional[List[str]] = attrs.field(
         default=None,
@@ -325,7 +325,7 @@ class AwardItem:
                 [
                     validators.optional(validators.instance_of(date)),
                     validators.ge(grant_start_date),
-                ]
+                ] # type: ignore
             ),
         ),
     )
@@ -359,6 +359,6 @@ class AwardItem:
     )
     _award_schema_version: str = attrs.field(
         default="0.1.0",
-        validator=validators.instance_of(str),
+        validator=validators.instance_of(str), # type: ignore
         alias="_award_schema_version",
     )
