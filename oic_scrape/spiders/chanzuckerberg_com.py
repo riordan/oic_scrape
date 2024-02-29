@@ -1,6 +1,6 @@
 import scrapy
 import json
-from oic_scrape.items import GrantItem
+from oic_scrape.items import AwardItem
 import datetime
 
 FUNDER_NAME = "Chan Zuckerberg Initiative"
@@ -31,21 +31,21 @@ class ChanzuckerbergComSpider(scrapy.Spider):
             raw_source_data = g["fields"]
             grant_id = f"chanzuckerberg::{raw_source_data['Opportunity Salesforce ID']}"
 
-            yield GrantItem(
+            ai = AwardItem(
                 grant_id=grant_id,
-                funder_name=FUNDER_NAME,
-                funder_ror_id=FUNDER_ROR_ID,
+                funder_org_name=FUNDER_NAME,
+                funder_org_ror_id=FUNDER_ROR_ID,
                 recipient_org_name=raw_source_data["Account Name"],
-                grant_year = raw_source_data["Commitment Year"],
-                award_amount=raw_source_data["Amount"],
+                grant_year = int(raw_source_data["Commitment Year"]),
+                award_amount=float(raw_source_data["Amount"]),
                 award_currency="USD",
-                award_amount_usd=raw_source_data["Amount"],
+                award_amount_usd=float(raw_source_data["Amount"]),
                 source="chanzuckerberg.com",
-                source_url=response.url,
+                source_url="https://chanzuckerberg.com/grants-ventures/grants/",
                 grant_description=raw_source_data["EXTERNAL: Grant Description for Website"],
                 program_of_funder=raw_source_data["Initiative & Program Text"],
                 comments=f"funding_entity={raw_source_data['Funding Entity']}",
                 _crawled_at=timestamp,
-                raw_source_data=raw_source_data,
+                raw_source_data=str(raw_source_data),
             )
-            yield g
+            yield ai
