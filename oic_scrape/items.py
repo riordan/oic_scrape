@@ -8,7 +8,7 @@ from scrapy import Item, Field
 import attrs
 from attrs import define, validators
 from typing import Optional, List, Dict
-from datetime import datetime
+from datetime import datetime, date
 
 
 class Ioi_Grant_Category(Enum):
@@ -166,7 +166,7 @@ class AwardParticipant:
         last_name (Optional[str], optional): The last name of the person (if specified). Defaults to None.
         suffix (Optional[str], optional): The suffix of the person (if specified). Defaults to None.
         identifiers (Optional[Dict[str, str]], optional): Any identifiers provided for the person. Defaults to None.
-            Identifiers provided for this person on the grant such as ORCID, ISNI, email address, etc as well as funder-specific identifiers for the person. Should be provided as key-value pairs.
+            Identifiers provided for this person on the grant such as ORCID, ISNI, email address, Github handle, etc. as well as funder-specific identifiers for the person. Should be provided as key-value pairs.
 
     """
 
@@ -205,56 +205,59 @@ class AwardParticipant:
 
 @define
 class AwardItem:
-    """
-    A class to represent a grant/award item.
+    """A class to represent a grant/award item.
 
     Represents the IOI formatted data for their grants dataset. Successor to the GrantItem class.
     Will be serialized into JSONND/jsonlines format for storage.
     [Derived from SoOi_2024_grants_dataset](https://docs.google.com/spreadsheets/d/1PEQiOmHq1u5tKnNEvIFJTtG_6eLHbWHJv3_Epce7lcQ/edit#gid=0)
 
-    ...
-
     Attributes
     ----------
     Each attribute is a Field() object. The description of each field is as follows (types are not):
 
-    _award_schema: str
-        The version of the award schema. Communicates to users the version of the schema.
+    Mandatory Fields:
+
+    _crawled_at : datetime
+        The date and time the grant was crawled by the IOI extractor. Must be added by the crawler.
+    source : str
+        The source of the information
     grant_id : str
         The unique identifier of the award.
             Prefixed with `source_name::` and the internal identifier of the award.
             If no public ID is available it will be prefixed with "ioi:<source_name>::"
             and a unique combination of grant attributes.
-    funder_name : str
+    funder_org_name : str
         The name of the funder
-    funder_ror_id : Optional[str]
-        The ROR ID of the funder
-
     recipient_org_name : str
         The name of the recipient organization
+
+    Optional Fields:
+
+    funder_org_ror_id : Optional[str]
+        The ROR ID of the funder
     recipient_org_ror_id : Optional[str]
         The ROR ID of the recipient organization
-    recipient_location: Optional[str]
+    recipient_org_location: Optional[str]
         Funder's designated location of the grantee / project.
         Provide hierarchical administrative data (e.g. New York City, New York, United States) or a well-formed address.
     pi_name : Optional[str]
-        The name of the principal investigator
-    grant_year : Optional[str]
+        The name of the principal investigator. If multiple PI's, use the first one listed, and include the rest in named_participants.
+    named_participants: Optional[List[AwardParticipant]]
+        Details, roles, and identifiers of named participants (grantees) associated with the award. Should include the PI, if known.
+    grant_year : Optional[int]
         The year of the grant. Fiscal year should be normalized to actual calendar year of issuance, as these can vary across funders.
     grant_duration : Optional[str]
         The length of time the grant is active (if known), in years or months.
-    grant_start_date : Optional[str]
+    grant_start_date : Optional[date]
         The starting date of the grant (if known)
-    grant_end_date : Optional[str]
+    grant_end_date : Optional[date]
         The end date of the grant (if known)
-    award_amount : Optional[str]
+    award_amount : Optional[float]
         The amount of the award
     award_currency : Optional[str]
         The currency of the award
     award_amount_usd : Optional[float]
         The amount of the award in USD
-    source : str
-        The source of the information
     source_url: Optional[str]
         The URL the data was crawled from
     grant_title : Optional[str]
@@ -266,16 +269,19 @@ class AwardItem:
         If hierarchical, use a ">" to separate levels (e.g. "Research>Science>Physics")
     comments : Optional[str]
         Any additional comments
-    _crawled_at : datetime.datetime
-        The date and time the grant was crawled by the IOI extractor. Must be added by the crawler.
-    raw_source_data = Optional[Dict[str, Any]]
+    raw_source_data: Optional[Dict[str, Any]]
         The raw fields obtained from the source, including that not used in the principal schema, in case we need to reference it later.
         Where including a source object blob (e.g. JSON or transformed XML), use the source's naming conventions.
         If you are scraping it from a site, use our own field names and conventions, where it makes sense.
+    _award_schema_version: Optional[str]
+        The version of the award schema. Communicates to users the version of the schema. Defaults to latest version provided in the package.
+        It is best practice to EXPLICITLY set this to communicate to downstream users the expectations they should hold for the data.
     """
 
     # Mandatory Fields
-    _crawled_at: datetime = attrs.field(validator=validators.instance_of(datetime))
+    _crawled_at: datetime = attrs.field(
+        validator=validators.instance_of(datetime), alias="_crawled_at"
+    )
     source: str = attrs.field(validator=validators.instance_of(str))
     grant_id: str = attrs.field(validator=validators.instance_of(str))
     funder_org_name: str = attrs.field(validator=validators.instance_of(str))
@@ -309,18 +315,18 @@ class AwardItem:
     grant_duration: Optional[str] = attrs.field(
         default=None, validator=validators.optional(validators.instance_of(str))
     )
-    grant_start_date: Optional[datetime] = attrs.field(
-        default=None, validator=validators.optional(validators.instance_of(datetime))
+    grant_start_date: Optional[date] = attrs.field(
+        default=None, validator=validators.optional(validators.instance_of(date))
     )
-    grant_end_date: Optional[datetime] = attrs.field(
-        default=None,
-        validator=validators.optional(
-            validators.and_(
+    grant_end_date: Optional[date] = (
+        attrs.field(
+            default=None,
+            validator=validators.and_(
                 [
-                    validators.optional(validators.instance_of(datetime)),
+                    validators.optional(validators.instance_of(date)),
                     validators.ge(grant_start_date),
                 ]
-            )
+            ),
         ),
     )
     award_amount: Optional[float] = attrs.field(
@@ -348,5 +354,11 @@ class AwardItem:
         default=None, validator=validators.optional(validators.instance_of(str))
     )
     raw_source_data: Optional[str] = attrs.field(
-        default=None, validator=validators.optional(validators.instance_of(str))
+        default=None,
+        validator=validators.optional(validators.instance_of(str)),
+    )
+    _award_schema_version: str = attrs.field(
+        default="0.1.0",
+        validator=validators.instance_of(str),
+        alias="_award_schema_version",
     )
