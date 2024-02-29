@@ -163,7 +163,7 @@ fragment GrantSearchResults on GrantSearchResultWithTotal {
                 self.logger.error(f"Error calculating grant end date: {e}")
 
         # Now, prepare the item
-        a = AwardItem(
+        award = AwardItem(
             grant_id=f"mellon:grants::{details['id']}",
             funder_org_name=FUNDER_NAME,
             funder_org_ror_id=FUNDER_ROR,
@@ -192,4 +192,4 @@ fragment GrantSearchResults on GrantSearchResultWithTotal {
             _award_schema_version="0.1.0",
         )
 
-        yield a
+        yield award
