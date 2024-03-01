@@ -7,6 +7,7 @@ import attrs
 from attrs import define, validators
 from typing import Optional, List, Dict
 from datetime import datetime, date
+import polars as pl
 
 
 @define
@@ -57,10 +58,31 @@ class AwardParticipant:
     suffix: Optional[str] = attrs.field(
         default=None, validator=validators.optional(validators.instance_of(str))
     )
-    identifiers: Optional[Dict[str, str]] = attrs.field(
-        default=None,
-        validator=attrs.validators.optional(attrs.validators.instance_of(dict)),
-    )
+    identifiers: Optional[List[[List[str, str]]]] = attrs.field(default=None)
+
+    @staticmethod
+    def get_polars_schema()->pl.Struct:
+        """Returns the Polars schema for the AwardParticipant class.
+
+        Note: This method must be manually kept up to date with the class attributes, much like the class docstring.
+
+        Returns:
+            pl.Struct: The Polars schema for the AwardParticipant class.
+        """
+        participant_schema = pl.Struct([
+                pl.Field("full_name", pl.Utf8),
+                pl.Field("is_pi", pl.Boolean),
+                pl.Field("affiliations", pl.List(pl.Utf8)),
+                pl.Field("grant_role", pl.Utf8),
+                pl.Field("first_name", pl.Utf8),
+                pl.Field("middle_name", pl.Utf8),
+                pl.Field("last_name", pl.Utf8),
+                pl.Field("suffix", pl.Utf8),
+                pl.Field("identifiers", pl.Struct({pl.Utf8: pl.Utf8()})) 
+            ])
+        
+        return participant_schema
+
 
 
 @define
@@ -215,3 +237,5 @@ class AwardItem:
         validator=validators.instance_of(str),  # type: ignore
         alias="_award_schema_version",
     )
+
+print(AwardParticipant.get_polars_schema())
