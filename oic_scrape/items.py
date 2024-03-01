@@ -269,7 +269,7 @@ class AwardItem:
         If hierarchical, use a ">" to separate levels (e.g. "Research>Science>Physics")
     comments : Optional[str]
         Any additional comments
-    raw_source_data: Optional[Dict[str, Any]]
+    raw_source_data: Optional[str]
         The raw fields obtained from the source, including that not used in the principal schema, in case we need to reference it later.
         Where including a source object blob (e.g. JSON or transformed XML), use the source's naming conventions.
         If you are scraping it from a site, use our own field names and conventions, where it makes sense.
