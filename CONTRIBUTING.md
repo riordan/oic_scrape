@@ -108,3 +108,29 @@ Output Notebook: notebook_pipelines/notebook_runs/neh_gov-2024-02-13-1128.ipynb
 Executing:   0%|                                                                        | 0/14 [00:00<?, ?cell/s]Executing notebook with kernel: python3
 Executing: 100%|███████████████████████████████████████████████████████████████| 14/14 [00:14<00:00,  1.07s/cell]
 ```
+
+## Misc
+
+Things that don't yet have a clear section.
+
+### Paramaterizing Pipelines
+
+It is strongly preferred for pipelines to be parameterized so that they can be focused on a limited subset of data. This helps us to avoid overloading servers by allowing us to not need to re-crawl the whole source, but to instead retrieve only the new or updated data.
+
+At present, parameters are implemented only in papermill-based pipelines, but should be extended to Scrapy-based crawlers as well.
+
+#### Temporal Parameters
+
+##### Date Parameters
+
+Crawlers are most often parameterized by date. This is preferred. Parameters should be named **`START_DATE`** and **`END_DATE`**. They should be in the format **`YYYY-MM-DD`**. **`START_DATE`** should be inclusive and **`END_DATE`** should be exclusive. If **`END_DATE`** is not provided, it should default to the current date.
+
+> **Why should `END_DATE` be exclusive?**
+>
+> Making the END_DATE exclusive simplifies the logic and ensures that we consistently retrieve the desired set of records without any ambiguity or missing data.
+>
+> When dealing with dates that include both a date and a time component, it can be challenging to determine what the "last date" should be. To avoid any confusion or potential data inconsistencies, it is often recommended to exclude the current date from the range.
+> 
+> In the specific scenario mentioned, setting END_DATE to the current date would ensure that when the code runs regularly, it retrieves all the records from the past 24 hours, giving us a complete set of records for each full day. By excluding the current date, we avoid the need for complex date calculations to ensure we don't miss any records from the current day.
+
+##### Year-based Parameters
