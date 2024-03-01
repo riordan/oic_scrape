@@ -6,7 +6,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from oic_scrape.items import AwardItem
 import re
-from attrs import asdict
+from attrs import asdict #needed to emit the AwardItem correctly to Scrapy
 
 FUNDER_ROR_ID = "https://ror.org/011x6n313"
 FUNDER_NAME = "Leona M. and Harry B. Helmsley Charitable Trust"
