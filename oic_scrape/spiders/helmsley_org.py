@@ -4,8 +4,9 @@ from scrapy.selector import Selector
 import dateparser
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from oic_scrape.items import GrantItem
+from oic_scrape.items import AwardItem
 import re
+from attrs import asdict #needed to emit the AwardItem correctly to Scrapy
 
 FUNDER_ROR_ID = "https://ror.org/011x6n313"
 FUNDER_NAME = "Leona M. and Harry B. Helmsley Charitable Trust"
@@ -43,7 +44,7 @@ class HelmsleyOrgSpider(Spider):
         # get the page from the response
         page = response.meta["playwright_page"]
 
-        all_grants_urls = []
+        all_grants_urls = set()
 
         #  Since the item index page remains the same and loads in new content
         # we will loop over the index page until we reach the end.
@@ -60,7 +61,7 @@ class HelmsleyOrgSpider(Spider):
             # extract links to item pages
             links = selector.css('td[data-title="GRANTEE"] a::attr(href)').extract()
             # add to list of all grants so we can crawl when finished with index
-            all_grants_urls.extend(links)
+            all_grants_urls.update(links)
 
             self.logger.debug(
                 f"The number of grants found so far: {len(all_grants_urls)}"
@@ -87,7 +88,7 @@ class HelmsleyOrgSpider(Spider):
         content = await page.content()
         selector = Selector(text=content)
         links = selector.css('td[data-title="GRANTEE"] a::attr(href)').extract()
-        all_grants_urls.extend(links)
+        all_grants_urls.update(links)
 
         # Deduplicate the list of grant URLs
         grant_urls = list(set(all_grants_urls))
@@ -132,6 +133,7 @@ class HelmsleyOrgSpider(Spider):
         )
 
         raw_source_data = {
+            "url": response.url,
             "recipient_org_name": recipient_org_name,
             "award_date": award_date,
             "term_of_grant": grant_duration,
@@ -147,38 +149,44 @@ class HelmsleyOrgSpider(Spider):
         # https://helmsleytrust.org/grants/association-sante-diabete-20196048/
         _match = re.search(r"(\d+)(?:/)?$", source_url)
         if _match:
-            grant_id = f"helmsley:grants::{_match.group()}"
+            grant_id = f"helmsley:grants::{_match.group(1)}"
         else:
             raise ValueError(f"Could not find grant ID in the URL {source_url}.")
+        
+        formatted_award_amount = float(re.sub(r"[^\d.]", "", award_amount))
 
         grant_start_date = dateparser.parse(award_date)
-        grant_year = grant_start_date.strftime("%Y") if grant_start_date else None
+        grant_year = int(grant_start_date.year) if grant_start_date else None
         # Calculate the grant end date based on the grant duration
-        duration_in_months = int(re.search(r"\d+", grant_duration).group())
-        # Calculate the grant_end_date by adding the duration to the grant_start_date
-        grant_end_date = grant_start_date + relativedelta(months=duration_in_months)
+        duration_in_months = re.search(r"\d+", grant_duration)
+        if duration_in_months and grant_start_date:
+            duration_in_months = int(duration_in_months.group())
+            # Calculate the grant_end_date by adding the duration to the grant_start_date
+            grant_end_date = grant_start_date + relativedelta(months=duration_in_months)
+        else:
+            grant_end_date = None
 
-        grant = GrantItem(
+        award = AwardItem(
             grant_id=grant_id,
-            funder_name=FUNDER_NAME,
-            funder_ror_id=FUNDER_ROR_ID,
+            funder_org_name=FUNDER_NAME,
+            funder_org_ror_id=FUNDER_ROR_ID,
             recipient_org_name=recipient_org_name,
             grant_year=grant_year,
             grant_duration=grant_duration,
             grant_start_date=grant_start_date,
             grant_end_date=grant_end_date,
-            award_amount=award_amount,
+            award_amount=formatted_award_amount,
             award_currency="USD",
-            award_amount_usd=award_amount,
+            award_amount_usd=formatted_award_amount,
             source="helmsleytrust.org",
             source_url=source_url,
             grant_description=grant_description,
             program_of_funder=program_of_funder,
             _crawled_at=datetime.utcnow(),
-            raw_source_data=raw_source_data,
+            raw_source_data=str(raw_source_data),
         )
 
-        yield grant
+        yield asdict(award)
 
     async def get_item_value_from_sibling(self, response, helmsley_heading):
         """
