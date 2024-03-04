@@ -1301,13 +1301,13 @@ files = [
 
 [[package]]
 name = "json5"
-version = "0.9.18"
+version = "0.9.19"
 description = "A Python implementation of the JSON5 data format."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "json5-0.9.18-py2.py3-none-any.whl", hash = "sha256:3f20193ff8dfdec6ab114b344e7ac5d76fac453c8bab9bdfe1460d1d528ec393"},
-    {file = "json5-0.9.18.tar.gz", hash = "sha256:ecb8ac357004e3522fb989da1bf08b146011edbd14fdffae6caad3bd68493467"},
+    {file = "json5-0.9.19-py2.py3-none-any.whl", hash = "sha256:1d9847bcec99eac66426c0c2ae3b2e82b116390f16f12e24b898dbe5c27832c6"},
+    {file = "json5-0.9.19.tar.gz", hash = "sha256:e7713017bdad329ce91773d73d814c62356313e3d191aec7d6a2e936e82f1558"},
 ]
 
 [package.extras]
@@ -4573,6 +4573,17 @@ numpy = ">=1.6.1"
 pillow = "*"
 
 [[package]]
+name = "xmltodict"
+version = "0.13.0"
+description = "Makes working with XML feel like you are working with JSON"
+optional = false
+python-versions = ">=3.4"
+files = [
+    {file = "xmltodict-0.13.0-py2.py3-none-any.whl", hash = "sha256:aa89e8fd76320154a40d19a0df04a4695fb9dc5ba977cbb68ab3e4eb225e7852"},
+    {file = "xmltodict-0.13.0.tar.gz", hash = "sha256:341595a488e3e01a85a9d8911d8912fd922ede5fecc4dce437eb4b6c8d037e56"},
+]
+
+[[package]]
 name = "ydata-profiling"
 version = "4.6.5"
 description = "Generate profile report for pandas DataFrame"
@@ -4665,4 +4676,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.11,<3.12"
-content-hash = "68fd0244501cc3bd2a3d9ca75cb294c31da8f339e532831aac2468f86406aa6e"
+content-hash = "05efa0e4f2393af7d6c15a14cbca8bb1521a1d31c5e96812baf815d8bb8223fb"
