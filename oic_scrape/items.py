@@ -5,8 +5,23 @@
 
 import attrs
 from attrs import define, validators
-from typing import Optional, List, Dict
+from typing import Optional, List, Dict, NamedTuple
 from datetime import datetime, date
+
+
+class ParticipantIdentifier(NamedTuple):
+    """Represents an identifier for a participant on an award, such as an ORCID.
+
+    Represents the attributes attached to a person named on an award.
+
+    Args:
+        name (str): The type of identifier.
+        id (str): The value of the identifier.
+
+    """
+
+    name: str
+    id: str
 
 
 @define
@@ -25,8 +40,9 @@ class AwardParticipant:
         middle_name (Optional[str], optional): The middle name (or initial) of the person (if specified). Defaults to None.
         last_name (Optional[str], optional): The last name of the person (if specified). Defaults to None.
         suffix (Optional[str], optional): The suffix of the person (if specified). Defaults to None.
-        identifiers (Optional[Dict[str, str]], optional): Any identifiers provided for the person. Defaults to None.
-            Identifiers provided for this person on the grant such as ORCID, ISNI, email address, Github handle, etc. as well as funder-specific identifiers for the person. Should be provided as key-value pairs.
+        identifiers (Optional[List[ParticipantIdentifier]], optional): List of any identifiers (e.g. ORCID) provided for the person. Defaults to None.
+            Identifiers provided for this person on the grant such as ORCID, ISNI, email address, Github handle, etc. as well as funder-specific identifiers for the person.
+            When identifiers are present, should take the form of a list of ParticipantIdentifier namedtuples such as: [ParticipantIdentifier(name="ORCID", id="0000-0003-3531-6550")].
 
     """
 
@@ -57,9 +73,14 @@ class AwardParticipant:
     suffix: Optional[str] = attrs.field(
         default=None, validator=validators.optional(validators.instance_of(str))
     )
-    identifiers: Optional[Dict[str, str]] = attrs.field(
+    identifiers: Optional[List[ParticipantIdentifier]] = attrs.field(
         default=None,
-        validator=attrs.validators.optional(attrs.validators.instance_of(dict)),
+        validator=attrs.validators.optional(
+            attrs.validators.deep_iterable(
+                member_validator=attrs.validators.instance_of(ParticipantIdentifier),
+                iterable_validator=attrs.validators.instance_of(list),
+            )
+        ),
     )
 
 
@@ -134,8 +155,7 @@ class AwardItem:
         Where including a source object blob (e.g. JSON or transformed XML), use the source's naming conventions.
         If you are scraping it from a site, use our own field names and conventions, where it makes sense.
     _award_schema_version: Optional[str]
-        The version of the award schema. Communicates to users the version of the schema. Defaults to latest version provided in the package.
-        It is best practice to EXPLICITLY set this to communicate to downstream users the expectations they should hold for the data.
+        The version of the award schema. Communicates to users the version of the schema. Defaults to latest version provided in the package. Should be set by the object itself to communicate the schema version + validation.
     """
 
     # Mandatory Fields
@@ -211,7 +231,7 @@ class AwardItem:
         validator=validators.optional(validators.instance_of(str)),
     )
     _award_schema_version: str = attrs.field(
-        default="0.1.0",
+        default="0.2.0",
         validator=validators.instance_of(str),  # type: ignore
         alias="_award_schema_version",
     )
