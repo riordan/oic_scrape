@@ -1,8 +1,9 @@
-Open Infrastructure Catalogue: Scraping Pipeline
+State of Open Infrastructure Funding: Scraping Pipeline
 ===============================================
 
+This is Invest in Open Infrastructure's core data scrapers for the annual State of Open Infrastructure report. It is intended to provide the data on funding, projects, and tools in the open infrastructure space.
 
-This is Invest in Open Infrastructure's core data scrapers for their Catalogue of Open Infrastructure. It is intended to provide the data on funding, projects, and tools in the open infrastructure space.
+The 2024 report, when released at the end of May, will be available [online](https://investinopen.org/state-of-open-infrastructure-2024) and as a [PDF for download](https://doi.org/10.5281/zenodo.10934089).
 
 ## Installation
 
@@ -10,7 +11,5 @@ This is Invest in Open Infrastructure's core data scrapers for their Catalogue o
 $ poetry install
 ```
 
-## Contributing Data Sources and Scrapers
-If you represent an organization that would like to contribute your funding or tooling data to the Catalogue, please get in touch with "Invest in Open Infrastructure <info@investinopen.org>". To work with this data, please use the catalogue itself.
-
-If you would like to help with the effort, please begin by reading the [CONTRIBUTING.md](CONTRIBUTING.md) file, which should provide a reasonable overview of the project documentation.
+## Contact
+If you have questions or feedback, please get in touch with "Invest in Open Infrastructure <info@investinopen.org>". 
