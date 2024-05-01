@@ -5,11 +5,5 @@ This is Invest in Open Infrastructure's core data scrapers for the annual State 
 
 The 2024 report, when released at the end of May, will be available [online](https://investinopen.org/state-of-open-infrastructure-2024) and as a [PDF for download](https://doi.org/10.5281/zenodo.10934089).
 
-## Installation
-
-```bash
-$ poetry install
-```
-
 ## Contact
 If you have questions or feedback, please get in touch with "Invest in Open Infrastructure <info@investinopen.org>". 
