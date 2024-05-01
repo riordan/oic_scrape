@@ -1,25 +1,14 @@
 # Contributing
 
-We welcome all help in contributing and maintaining this effort. This is currently an in-progress document and will serve as a placeholder for more detailed information in the future.
+At some point we may invite community contributions to this work. This document serves as a placeholder for more detailed information for future, collaborative efforts.
 
 ## Participation & Code of Conduct
 
-This is a collaborative effort, benefiting from the participation of IOI community members, funders, and data users. We welcome their participation!
-
 This project and everyone participating in it is governed by the [Invest in Open Infrastructure Code of Conduct](https://investinopen.org/code-of-conduct/) . By participating, you are expected to uphold this code. Please report unacceptable behavior to emmy at investinopen.org or to kaitlin at investinopen.org.
-
-## How to Contribute
-
-- Submit issues noting problems with existing data (please search for duplicates first)
-- Submit issues noting problems with existing scrapers
-- Submit ideas for additional data sources to include
-- Submit ideas for improving existing data sources
-
-If you are part of a funding organization and would like to improve the quality of your organization's data in the Catalog of Open Infrastructure or have issues with the way it is currently being obtained, please get directly in touch with the project's maintainers (#TODO Set up IOI email for maintainers).
 
 ## Development Environment
 
-To contribute code to this project or to run it independently, you'll need to set up a local environment.
+To run this independently, you'll need to set up a local environment.
 
 The project architecture is:
 
