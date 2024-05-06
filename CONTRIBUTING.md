@@ -14,11 +14,11 @@ The project architecture is:
 
 - Python (3.11+)
 - [Poetry](https://python-poetry.org/) _project dependencies and packaging_
-    - Scrapy _Crawling framework_
-        - scrapy-playwright _extension for working with interactive sites_
-        - Chromium _browser for crawling interactive sites_
-    - Jupyter _for file-based pipelines_
-    - [Papermill](https://papermill.readthedocs.io/en/latest/) _for running file-based pipelines_
+  - Scrapy _Crawling framework_
+    - scrapy-playwright _extension for working with interactive sites_
+    - Chromium _browser for crawling interactive sites_
+  - Jupyter _for file-based and API-based pipelines_
+  - [Papermill](https://papermill.readthedocs.io/en/latest/) _for running file-based pipelines_
 
 ### Prerequisites
 
@@ -47,7 +47,7 @@ One side-effect of using Poetry is that any CLI tools installed by the Python de
 
 We use [Playwright](https://playwright.dev) so that Scrapy can crawl interactive websites (e.g. no server-side rendering). We need to [install a special version of chromium](https://playwright.dev/python/docs/browsers).
 
-```
+``` bash
 $ poetry run playwright install chromium
 ```
 
@@ -55,7 +55,7 @@ $ poetry run playwright install chromium
 
 ## Running Crawls
 
-You can see what scrapers are available with:
+You can see what Scrapy spiders are available with:
 
 ```bash
 $ poetry run scrapy list
@@ -110,16 +110,20 @@ At present, parameters are implemented only in papermill-based pipelines, but sh
 
 #### Temporal Parameters
 
+Temporal parameters are present in many of the [notebook-based pipelines](notebook_pipelines). They are used to specify the date range for which data should be retrieved.
+
 ##### Date Parameters
 
-Crawlers are most often parameterized by date. This is preferred. Parameters should be named **`START_DATE`** and **`END_DATE`**. They should be in the format **`YYYY-MM-DD`**. **`START_DATE`** should be inclusive and **`END_DATE`** should be exclusive. If **`END_DATE`** is not provided, it should default to the current date.
+Generally speaking, crawlers are often parameterized by date; this is preferred. Parameters should be named **`START_DATE`** and **`END_DATE`**. They should be in the format **`YYYY-MM-DD`**. **`START_DATE`** should be inclusive and **`END_DATE`** should be exclusive. If **`END_DATE`** is not provided, it should default to the current date.
 
 > **Why should `END_DATE` be exclusive?**
 >
 > Making the END_DATE exclusive simplifies the logic and ensures that we consistently retrieve the desired set of records without any ambiguity or missing data.
 >
 > When dealing with dates that include both a date and a time component, it can be challenging to determine what the "last date" should be. To avoid any confusion or potential data inconsistencies, it is often recommended to exclude the current date from the range.
-> 
+>
 > In the specific scenario mentioned, setting END_DATE to the current date would ensure that when the code runs regularly, it retrieves all the records from the past 24 hours, giving us a complete set of records for each full day. By excluding the current date, we avoid the need for complex date calculations to ensure we don't miss any records from the current day.
 
-##### Year-based Parameters
+##### Year Parameters
+
+Some sources only provide data by year. In this case, the parameter should be named **`YEAR`** and should be in the format **`YYYY`**. In most cases where a year is present, only a `START_YEAR` is used, as the script will run up to the most recently available data.
