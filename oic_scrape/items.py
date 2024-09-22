@@ -157,7 +157,7 @@ class AwardItem:
     recipient_org_location: Optional[str] = attrs.field(
         default=None, validator=validators.optional(validators.instance_of(str))
     )
-    pi_name: str = attrs.field(
+    pi_name: Optional[str] = attrs.field(
         default=None, validator=validators.optional(validators.instance_of(str))
     )
     named_participants: Optional[List[AwardParticipant]] = attrs.field(
@@ -211,7 +211,7 @@ class AwardItem:
         validator=validators.optional(validators.instance_of(str)),
     )
     _award_schema_version: str = attrs.field(
-        default="0.1.0",
+        default="0.1.1",
         validator=validators.instance_of(str),  # type: ignore
         alias="_award_schema_version",
     )
