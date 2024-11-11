@@ -5,7 +5,7 @@ import re
 from oic_scrape.items import AwardItem, AwardParticipant
 
 FUNDER_ORG_NAME = "James S. McDonnell Foundation"
-FUNDER_ORG_ROR_ID = "https://ror.org/02ex6cf31"
+FUNDER_ORG_ROR_ID = "https://ror.org/03dy4aq19"
 
 class JsmfOrgSpider(scrapy.Spider):
     name = "jsmf_org_grants"
