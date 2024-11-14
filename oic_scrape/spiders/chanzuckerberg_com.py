@@ -42,7 +42,7 @@ class ChanzuckerbergComSpider(scrapy.Spider):
                 award_amount_usd=float(raw_source_data["Amount"]),
                 source="chanzuckerberg.com",
                 source_url="https://chanzuckerberg.com/grants-ventures/grants/",
-                grant_description=raw_source_data["EXTERNAL: Grant Description for Website"],
+                grant_description=raw_source_data["Grant Purpose"],
                 program_of_funder=raw_source_data["Initiative & Program Text"],
                 comments=f"funding_entity={raw_source_data['Funding Entity']}",
                 _crawled_at=timestamp,
